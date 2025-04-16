@@ -12,7 +12,6 @@
       font-family: 'Segoe UI', sans-serif;
       background: #f9f9f9;
     }
-
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -21,17 +20,14 @@
       color: white;
       padding: 10px 20px;
     }
-
     .navbar-left {
       font-size: 20px;
     }
-
     .navbar-right {
       display: flex;
       gap: 10px;
       align-items: center;
     }
-
     .navbar a {
       background-color: white;
       color: black;
@@ -42,12 +38,10 @@
       display: flex;
       align-items: center;
     }
-
     .navbar a img {
       height: 24px;
       margin-right: 8px;
     }
-
     .sound-toggle {
       background-color: white;
       font-size: 18px;
@@ -141,7 +135,7 @@
 
   <!-- 인트로 화면 -->
   <div id="intro">
-    <img src="logo.png" alt="로고">
+    <img src="비에스트 로고(딱맞게).png" alt="로고">
     <button onclick="startCatalog()">카달로그 시작하기</button>
   </div>
 
@@ -157,25 +151,25 @@
     </div>
   </div>
 
-  <!-- 플립북 -->
+  <!-- 플립북 영역 -->
   <div id="flipbook"></div>
 
-  <!-- 페이지 이동 버튼 -->
+  <!-- 페이지 네비게이션 -->
   <div class="nav-buttons">
     <button id="prev">⬅ 이전</button>
-    <span class="page-number" id="page-number">1 / 84</span>
+    <span class="page-number" id="page-number">1 / 83</span>
     <button id="next">다음 ➡</button>
   </div>
 
-  <!-- 책 넘기기 소리 -->
+  <!-- 넘기기 효과음 -->
   <audio id="flipSound" src="page-flip.mp3" preload="auto"></audio>
 
   <script>
-    const totalPages = 84;
+    const totalPages = 83; // 01~83
     const pages = [];
     let soundEnabled = true;
 
-    for (let i = 0; i < totalPages; i++) {
+    for (let i = 1; i <= totalPages; i++) {
       const num = String(i).padStart(2, '0');
       pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
     }
