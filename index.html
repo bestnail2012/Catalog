@@ -1,21 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
   <meta charset="utf-8">
   <title>카달로그 플립북</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
-    body { background: #f0f0f0; font-family: sans-serif; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+    }
+
+    /* 상단 메뉴바 */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .navbar h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      background-color: #555;
+      padding: 6px 12px;
+      border-radius: 5px;
+    }
+
+    .navbar a:hover {
+      background-color: #777;
+    }
+
     #flipbook {
-      width: 800px;
-      height: 500px;
-      margin: 50px auto;
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
+
     .page {
-      width: 400px;
-      height: 500px;
+      width: 100%;
+      height: 100%;
     }
+
     .page img {
       width: 100%;
       height: 100%;
@@ -25,101 +60,122 @@
 </head>
 <body>
 
-<div id="flipbook">
-   <div class="page"><img src="images/01.jpg" /></div>
- <div class="page"><img src="images/02.jpg" /></div>
- <div class="page"><img src="images/03.jpg" /></div>
- <div class="page"><img src="images/04.jpg" /></div>
- <div class="page"><img src="images/05.jpg" /></div>
- <div class="page"><img src="images/06.jpg" /></div>
- <div class="page"><img src="images/07.jpg" /></div>
- <div class="page"><img src="images/08.jpg" /></div>
- <div class="page"><img src="images/09.jpg" /></div>
- <div class="page"><img src="images/10.jpg" /></div>
- <div class="page"><img src="images/11.jpg" /></div>
- <div class="page"><img src="images/12.jpg" /></div>
- <div class="page"><img src="images/13.jpg" /></div>
- <div class="page"><img src="images/14.jpg" /></div>
- <div class="page"><img src="images/15.jpg" /></div>
- <div class="page"><img src="images/16.jpg" /></div>
- <div class="page"><img src="images/17.jpg" /></div>
- <div class="page"><img src="images/18.jpg" /></div>
- <div class="page"><img src="images/19.jpg" /></div>
- <div class="page"><img src="images/20.jpg" /></div>
- <div class="page"><img src="images/21.jpg" /></div>
- <div class="page"><img src="images/22.jpg" /></div>
- <div class="page"><img src="images/23.jpg" /></div>
- <div class="page"><img src="images/24.jpg" /></div>
- <div class="page"><img src="images/25.jpg" /></div>
- <div class="page"><img src="images/26.jpg" /></div>
- <div class="page"><img src="images/27.jpg" /></div>
- <div class="page"><img src="images/28.jpg" /></div>
- <div class="page"><img src="images/29.jpg" /></div>
- <div class="page"><img src="images/30.jpg" /></div>
- <div class="page"><img src="images/31.jpg" /></div>
- <div class="page"><img src="images/32.jpg" /></div>
- <div class="page"><img src="images/33.jpg" /></div>
- <div class="page"><img src="images/34.jpg" /></div>
- <div class="page"><img src="images/35.jpg" /></div>
- <div class="page"><img src="images/36.jpg" /></div>
- <div class="page"><img src="images/37.jpg" /></div>
- <div class="page"><img src="images/38.jpg" /></div>
- <div class="page"><img src="images/39.jpg" /></div>
- <div class="page"><img src="images/40.jpg" /></div>
- <div class="page"><img src="images/41.jpg" /></div>
- <div class="page"><img src="images/42.jpg" /></div>
- <div class="page"><img src="images/43.jpg" /></div>
- <div class="page"><img src="images/44.jpg" /></div>
- <div class="page"><img src="images/45.jpg" /></div>
- <div class="page"><img src="images/46.jpg" /></div>
- <div class="page"><img src="images/47.jpg" /></div>
- <div class="page"><img src="images/48.jpg" /></div>
- <div class="page"><img src="images/49.jpg" /></div>
- <div class="page"><img src="images/50.jpg" /></div>
- <div class="page"><img src="images/51.jpg" /></div>
- <div class="page"><img src="images/52.jpg" /></div>
- <div class="page"><img src="images/53.jpg" /></div>
- <div class="page"><img src="images/54.jpg" /></div>
- <div class="page"><img src="images/55.jpg" /></div>
- <div class="page"><img src="images/56.jpg" /></div>
- <div class="page"><img src="images/57.jpg" /></div>
- <div class="page"><img src="images/58.jpg" /></div>
- <div class="page"><img src="images/59.jpg" /></div>
- <div class="page"><img src="images/60.jpg" /></div>
- <div class="page"><img src="images/61.jpg" /></div>
- <div class="page"><img src="images/62.jpg" /></div>
- <div class="page"><img src="images/63.jpg" /></div>
- <div class="page"><img src="images/64.jpg" /></div>
- <div class="page"><img src="images/65.jpg" /></div>
- <div class="page"><img src="images/66.jpg" /></div>
- <div class="page"><img src="images/67.jpg" /></div>
- <div class="page"><img src="images/68.jpg" /></div>
- <div class="page"><img src="images/69.jpg" /></div>
- <div class="page"><img src="images/70.jpg" /></div>
- <div class="page"><img src="images/71.jpg" /></div>
- <div class="page"><img src="images/72.jpg" /></div>
- <div class="page"><img src="images/73.jpg" /></div>
- <div class="page"><img src="images/74.jpg" /></div>
- <div class="page"><img src="images/75.jpg" /></div>
- <div class="page"><img src="images/76.jpg" /></div>
- <div class="page"><img src="images/77.jpg" /></div>
- <div class="page"><img src="images/78.jpg" /></div>
- <div class="page"><img src="images/79.jpg" /></div>
- <div class="page"><img src="images/80.jpg" /></div>
- <div class="page"><img src="images/81.jpg" /></div>
- <div class="page"><img src="images/82.jpg" /></div>
- <div class="page"><img src="images/83.jpg" /></div>
+  <!-- 상단 메뉴바 -->
+  <div class="navbar">
+    <h1>📖 카달로그</h1>
+    <a href="/">🏠 홈</a>
+  </div>
 
-  <!-- 필요 시 더 추가 -->
-</div>
+  <!-- 플립북 영역 -->
+  <div id="flipbook">
+      <div class="page"><img src="01.jpg" /></div>
+      <div class="page"><img src="02.jpg" /></div>
+      <div class="page"><img src="03.jpg" /></div>
+      <div class="page"><img src="04.jpg" /></div>
+      <div class="page"><img src="05.jpg" /></div>
+      <div class="page"><img src="06.jpg" /></div>
+      <div class="page"><img src="07.jpg" /></div>
+      <div class="page"><img src="08.jpg" /></div>
+      <div class="page"><img src="09.jpg" /></div>
+      <div class="page"><img src="10.jpg" /></div>
+      <div class="page"><img src="11.jpg" /></div>
+      <div class="page"><img src="12.jpg" /></div>
+      <div class="page"><img src="13.jpg" /></div>
+      <div class="page"><img src="14.jpg" /></div>
+      <div class="page"><img src="15.jpg" /></div>
+      <div class="page"><img src="16.jpg" /></div>
+      <div class="page"><img src="17.jpg" /></div>
+      <div class="page"><img src="18.jpg" /></div>
+      <div class="page"><img src="19.jpg" /></div>
+      <div class="page"><img src="20.jpg" /></div>
+      <div class="page"><img src="21.jpg" /></div>
+      <div class="page"><img src="22.jpg" /></div>
+      <div class="page"><img src="23.jpg" /></div>
+      <div class="page"><img src="24.jpg" /></div>
+      <div class="page"><img src="25.jpg" /></div>
+      <div class="page"><img src="26.jpg" /></div>
+      <div class="page"><img src="27.jpg" /></div>
+      <div class="page"><img src="28.jpg" /></div>
+      <div class="page"><img src="29.jpg" /></div>
+      <div class="page"><img src="30.jpg" /></div>
+      <div class="page"><img src="31.jpg" /></div>
+      <div class="page"><img src="32.jpg" /></div>
+      <div class="page"><img src="33.jpg" /></div>
+      <div class="page"><img src="34.jpg" /></div>
+      <div class="page"><img src="35.jpg" /></div>
+      <div class="page"><img src="36.jpg" /></div>
+      <div class="page"><img src="37.jpg" /></div>
+      <div class="page"><img src="38.jpg" /></div>
+      <div class="page"><img src="39.jpg" /></div>
+      <div class="page"><img src="40.jpg" /></div>
+      <div class="page"><img src="41.jpg" /></div>
+      <div class="page"><img src="42.jpg" /></div>
+      <div class="page"><img src="43.jpg" /></div>
+      <div class="page"><img src="44.jpg" /></div>
+      <div class="page"><img src="45.jpg" /></div>
+      <div class="page"><img src="46.jpg" /></div>
+      <div class="page"><img src="47.jpg" /></div>
+      <div class="page"><img src="48.jpg" /></div>
+      <div class="page"><img src="49.jpg" /></div>
+      <div class="page"><img src="50.jpg" /></div>
+      <div class="page"><img src="51.jpg" /></div>
+      <div class="page"><img src="52.jpg" /></div>
+      <div class="page"><img src="53.jpg" /></div>
+      <div class="page"><img src="54.jpg" /></div>
+      <div class="page"><img src="55.jpg" /></div>
+      <div class="page"><img src="56.jpg" /></div>
+      <div class="page"><img src="57.jpg" /></div>
+      <div class="page"><img src="58.jpg" /></div>
+      <div class="page"><img src="59.jpg" /></div>
+      <div class="page"><img src="60.jpg" /></div>
+      <div class="page"><img src="61.jpg" /></div>
+      <div class="page"><img src="62.jpg" /></div>
+      <div class="page"><img src="63.jpg" /></div>
+      <div class="page"><img src="64.jpg" /></div>
+      <div class="page"><img src="65.jpg" /></div>
+      <div class="page"><img src="66.jpg" /></div>
+      <div class="page"><img src="67.jpg" /></div>
+      <div class="page"><img src="68.jpg" /></div>
+      <div class="page"><img src="69.jpg" /></div>
+      <div class="page"><img src="70.jpg" /></div>
+      <div class="page"><img src="71.jpg" /></div>
+      <div class="page"><img src="72.jpg" /></div>
+      <div class="page"><img src="73.jpg" /></div>
+      <div class="page"><img src="74.jpg" /></div>
+      <div class="page"><img src="75.jpg" /></div>
+      <div class="page"><img src="76.jpg" /></div>
+      <div class="page"><img src="77.jpg" /></div>
+      <div class="page"><img src="78.jpg" /></div>
+      <div class="page"><img src="79.jpg" /></div>
+      <div class="page"><img src="80.jpg" /></div>
+      <div class="page"><img src="81.jpg" /></div>
+      <div class="page"><img src="82.jpg" /></div>
+      <div class="page"><img src="83.jpg" /></div>
+  </div>
 
-<script>
-  $("#flipbook").turn({
-    width: 800,
-    height: 500,
-    autoCenter: true
-  });
-</script>
+  <script>
+    function setFlipbookSize() {
+      const maxWidth = 800;
+      const screenWidth = window.innerWidth;
+      const width = Math.min(screenWidth * 0.95, maxWidth);
+      const height = width * 1.3;
+
+      $("#flipbook").turn("destroy").html($("#flipbook").html());
+      $("#flipbook").turn({
+        width: width,
+        height: height,
+        autoCenter: true
+      });
+    }
+
+    $(document).ready(function () {
+      setFlipbookSize();
+    });
+
+    $(window).resize(function () {
+      setFlipbookSize();
+    });
+  </script>
 
 </body>
 </html>
