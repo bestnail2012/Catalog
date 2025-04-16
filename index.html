@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <title>카달로그 플립북</title>
+  <title>비에스트 카달로그</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
@@ -28,19 +28,19 @@
     }
 
     .navbar a {
-      color: black;
       background-color: white;
+      color: black;
       text-decoration: none;
       font-size: 16px;
       padding: 6px 12px;
       border-radius: 5px;
-      display: inline-flex;
+      display: flex;
       align-items: center;
     }
 
     .navbar a img {
       height: 24px;
-      margin-left: 8px;
+      margin-right: 8px;
     }
 
     #flipbook {
@@ -49,7 +49,6 @@
     }
 
     .page {
-      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -60,18 +59,8 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+      background-color: white;
     }
-
-    /* 모바일 세로에서 반반 클릭 영역 */
-    .left-half, .right-half {
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      z-index: 5;
-    }
-    .left-half { left: 0; }
-    .right-half { right: 0; }
 
     .nav-buttons {
       text-align: center;
@@ -92,6 +81,7 @@
       border: none;
       border-radius: 25px;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     .nav-buttons button:hover {
@@ -99,7 +89,9 @@
     }
 
     .page-number {
+      text-align: center;
       font-size: 14px;
+      margin-top: 5px;
       color: #555;
     }
   </style>
@@ -107,9 +99,10 @@
 <body>
 
   <div class="navbar">
-    <h1>📖 카달로그</h1>
+    <h1>비에스트 카달로그</h1>
     <a href="https://www.bestnail.kr" target="_blank">
-      쇼핑몰 <img src="비에스트 로고(딱맞게).png" alt="로고">
+      <img src="비에스트 로고(딱맞게).png" alt="로고">
+      쇼핑몰
     </a>
   </div>
 
@@ -126,15 +119,12 @@
     const pages = [];
 
     for (let i = 1; i <= totalPages; i++) {
-      const img = `<img src="${String(i).padStart(2, '0')}.jpg" loading="lazy" />`;
-      const left = `<div class='left-half' onclick="$('#flipbook').turn('previous')"></div>`;
-      const right = `<div class='right-half' onclick="$('#flipbook').turn('next')"></div>`;
-      const content = `<div class='page'>${img}${left}${right}</div>`;
-      pages.push(content);
+      const num = String(i).padStart(2, '0');
+      pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
     }
 
     function getDisplayMode() {
-      const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const isPortrait = window.innerHeight > window.innerWidth;
       return isMobile && isPortrait ? 'single' : 'double';
     }
@@ -159,10 +149,15 @@
         height: height,
         autoCenter: true,
         display: displayMode,
-        gradients: false,
+        gradients: true,       // ✅ 책 넘김 효과 강화
+        duration: 1200,        // ✅ 넘김 속도 (ms)
+        elevation: 50,         // ✅ 책장 휘어짐 정도
+        acceleration: true,
         turnCorners: "",
         when: {
-          turning: function(e, page, view) { e.stopPropagation(); }
+          turning: function(e, page, view) {
+            e.stopPropagation();
+          }
         }
       });
 
@@ -197,17 +192,24 @@
         updateButtons();
       });
 
-      // PC 클릭 이벤트 (모바일 제외)
+      // 클릭 위치에 따라 페이지 넘기기
       document.addEventListener("click", function (e) {
-        const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
-        const display = $("#flipbook").turn("display");
-        const fb = document.getElementById("flipbook");
-        if (!fb.contains(e.target)) return;
+        const flipbook = document.getElementById("flipbook");
+        if (!flipbook.contains(e.target)) return;
 
-        if (!isMobile || display === 'double') {
-          const rect = fb.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          if (x > rect.width / 2) {
+        const display = $("#flipbook").turn("display");
+        const rect = flipbook.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const mid = rect.width / 2;
+
+        if (display === 'single') {
+          if (x > mid) {
+            $("#flipbook").turn("next");
+          } else {
+            $("#flipbook").turn("previous");
+          }
+        } else {
+          if (x > mid) {
             $("#flipbook").turn("next");
           } else {
             $("#flipbook").turn("previous");
