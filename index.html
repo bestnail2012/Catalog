@@ -114,6 +114,9 @@
     <button id="next">다음 ➡</button>
   </div>
 
+  <!-- ✅ 책 넘기는 효과음 -->
+  <audio id="flipSound" src="page-flip.mp3" preload="auto"></audio>
+
   <script>
     const totalPages = 83;
     const pages = [];
@@ -133,6 +136,14 @@
       $("#flipbook").html(pages.join("\n"));
     }
 
+    function playFlipSound() {
+      const audio = document.getElementById("flipSound");
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+    }
+
     function initializeFlipbook() {
       const maxWidth = 1000;
       const screenWidth = window.innerWidth;
@@ -149,9 +160,9 @@
         height: height,
         autoCenter: true,
         display: displayMode,
-        gradients: true,       // ✅ 책 넘김 효과 강화
-        duration: 1200,        // ✅ 넘김 속도 (ms)
-        elevation: 50,         // ✅ 책장 휘어짐 정도
+        gradients: true,
+        duration: 1200,
+        elevation: 50,
         acceleration: true,
         turnCorners: "",
         when: {
@@ -181,8 +192,15 @@
       buildFlipbook();
       initializeFlipbook();
 
-      $("#prev").on("click", () => $("#flipbook").turn("previous"));
-      $("#next").on("click", () => $("#flipbook").turn("next"));
+      $("#prev").on("click", () => {
+        $("#flipbook").turn("previous");
+        playFlipSound(); // ⬅ 효과음
+      });
+
+      $("#next").on("click", () => {
+        $("#flipbook").turn("next");
+        playFlipSound(); // ⬅ 효과음
+      });
 
       $(window).on("resize orientationchange", () => {
         initializeFlipbook();
@@ -190,9 +208,9 @@
 
       $("#flipbook").on("turned", () => {
         updateButtons();
+        playFlipSound(); // ⬅ 효과음
       });
 
-      // 클릭 위치에 따라 페이지 넘기기
       document.addEventListener("click", function (e) {
         const flipbook = document.getElementById("flipbook");
         if (!flipbook.contains(e.target)) return;
@@ -202,19 +220,13 @@
         const x = e.clientX - rect.left;
         const mid = rect.width / 2;
 
-        if (display === 'single') {
-          if (x > mid) {
-            $("#flipbook").turn("next");
-          } else {
-            $("#flipbook").turn("previous");
-          }
+        if (x > mid) {
+          $("#flipbook").turn("next");
         } else {
-          if (x > mid) {
-            $("#flipbook").turn("next");
-          } else {
-            $("#flipbook").turn("previous");
-          }
+          $("#flipbook").turn("previous");
         }
+
+        playFlipSound(); // ⬅ 효과음
       });
     });
   </script>
