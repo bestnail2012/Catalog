@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <title>카달로그 플립북 - 반응형</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>카달로그 플립북 - 로고버전</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -31,6 +31,8 @@
       background-color: #555;
       padding: 6px 12px;
       border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
     }
     .navbar a:hover {
       background-color: #777;
@@ -41,16 +43,27 @@
     }
     .page {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       background: white;
-      width: 100%;
-      height: 100%;
     }
     .page img {
       width: 100%;
       height: 100%;
-      object-fit: contain; background-color: white;
+      object-fit: contain;
+      background-color: white;
+    }
+    .nav-buttons {
+      text-align: center;
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      background: rgba(255,255,255,0.9);
+      z-index: 999;
+    }
+    .nav-buttons button {
+      font-size: 18px;
+      padding: 10px 20px;
     }
   </style>
 </head>
@@ -58,171 +71,123 @@
 
   <div class="navbar">
     <h1>📖 카달로그</h1>
-    <a href="https://bestnail2012.github.io/">🏠 홈</a>
+    <a href="https://www.bestnail.kr" target="_blank">🛒 쇼핑몰 <img src="비에스트 로고(딱맞게).png" alt="로고" style="height: 24px; vertical-align: middle; margin-left: 8px;"></a>
   </div>
 
-  <div id="flipbook">
-      <div class="page"><img src="01.jpg" /></div>
-      <div class="page"><img src="02.jpg" /></div>
-      <div class="page"><img src="03.jpg" /></div>
-      <div class="page"><img src="04.jpg" /></div>
-      <div class="page"><img src="05.jpg" /></div>
-      <div class="page"><img src="06.jpg" /></div>
-      <div class="page"><img src="07.jpg" /></div>
-      <div class="page"><img src="08.jpg" /></div>
-      <div class="page"><img src="09.jpg" /></div>
-      <div class="page"><img src="10.jpg" /></div>
-      <div class="page"><img src="11.jpg" /></div>
-      <div class="page"><img src="12.jpg" /></div>
-      <div class="page"><img src="13.jpg" /></div>
-      <div class="page"><img src="14.jpg" /></div>
-      <div class="page"><img src="15.jpg" /></div>
-      <div class="page"><img src="16.jpg" /></div>
-      <div class="page"><img src="17.jpg" /></div>
-      <div class="page"><img src="18.jpg" /></div>
-      <div class="page"><img src="19.jpg" /></div>
-      <div class="page"><img src="20.jpg" /></div>
-      <div class="page"><img src="21.jpg" /></div>
-      <div class="page"><img src="22.jpg" /></div>
-      <div class="page"><img src="23.jpg" /></div>
-      <div class="page"><img src="24.jpg" /></div>
-      <div class="page"><img src="25.jpg" /></div>
-      <div class="page"><img src="26.jpg" /></div>
-      <div class="page"><img src="27.jpg" /></div>
-      <div class="page"><img src="28.jpg" /></div>
-      <div class="page"><img src="29.jpg" /></div>
-      <div class="page"><img src="30.jpg" /></div>
-      <div class="page"><img src="31.jpg" /></div>
-      <div class="page"><img src="32.jpg" /></div>
-      <div class="page"><img src="33.jpg" /></div>
-      <div class="page"><img src="34.jpg" /></div>
-      <div class="page"><img src="35.jpg" /></div>
-      <div class="page"><img src="36.jpg" /></div>
-      <div class="page"><img src="37.jpg" /></div>
-      <div class="page"><img src="38.jpg" /></div>
-      <div class="page"><img src="39.jpg" /></div>
-      <div class="page"><img src="40.jpg" /></div>
-      <div class="page"><img src="41.jpg" /></div>
-      <div class="page"><img src="42.jpg" /></div>
-      <div class="page"><img src="43.jpg" /></div>
-      <div class="page"><img src="44.jpg" /></div>
-      <div class="page"><img src="45.jpg" /></div>
-      <div class="page"><img src="46.jpg" /></div>
-      <div class="page"><img src="47.jpg" /></div>
-      <div class="page"><img src="48.jpg" /></div>
-      <div class="page"><img src="49.jpg" /></div>
-      <div class="page"><img src="50.jpg" /></div>
-      <div class="page"><img src="51.jpg" /></div>
-      <div class="page"><img src="52.jpg" /></div>
-      <div class="page"><img src="53.jpg" /></div>
-      <div class="page"><img src="54.jpg" /></div>
-      <div class="page"><img src="55.jpg" /></div>
-      <div class="page"><img src="56.jpg" /></div>
-      <div class="page"><img src="57.jpg" /></div>
-      <div class="page"><img src="58.jpg" /></div>
-      <div class="page"><img src="59.jpg" /></div>
-      <div class="page"><img src="60.jpg" /></div>
-      <div class="page"><img src="61.jpg" /></div>
-      <div class="page"><img src="62.jpg" /></div>
-      <div class="page"><img src="63.jpg" /></div>
-      <div class="page"><img src="64.jpg" /></div>
-      <div class="page"><img src="65.jpg" /></div>
-      <div class="page"><img src="66.jpg" /></div>
-      <div class="page"><img src="67.jpg" /></div>
-      <div class="page"><img src="68.jpg" /></div>
-      <div class="page"><img src="69.jpg" /></div>
-      <div class="page"><img src="70.jpg" /></div>
-      <div class="page"><img src="71.jpg" /></div>
-      <div class="page"><img src="72.jpg" /></div>
-      <div class="page"><img src="73.jpg" /></div>
-      <div class="page"><img src="74.jpg" /></div>
-      <div class="page"><img src="75.jpg" /></div>
-      <div class="page"><img src="76.jpg" /></div>
-      <div class="page"><img src="77.jpg" /></div>
-      <div class="page"><img src="78.jpg" /></div>
-      <div class="page"><img src="79.jpg" /></div>
-      <div class="page"><img src="80.jpg" /></div>
-      <div class="page"><img src="81.jpg" /></div>
-      <div class="page"><img src="82.jpg" /></div>
-      <div class="page"><img src="83.jpg" /></div>
-  
-    <!-- 고정형 하단 버튼 -->
-    <div style="text-align: center; position: fixed; bottom: 20px; width: 100%; background: rgba(255,255,255,0.9); z-index: 999;">
-      <button id="prev" style="font-size: 18px; padding: 10px 20px;">⬅ 이전</button>
-      <button id="next" style="font-size: 18px; padding: 10px 20px;">다음 ➡</button>
-    </div>
+  <div id="flipbook"></div>
+
+  <div class="nav-buttons">
+    <button id="prev">⬅ 이전</button>
+    <button id="next">다음 ➡</button>
+  </div>
 
   <script>
-    $("#prev").on("click", function () {
-      $("#flipbook").turn("previous");
-    });
-    $("#next").on("click", function () {
-      $("#flipbook").turn("next");
-    });
-
-    // 화면 클릭 시 페이지 넘김
-    document.addEventListener("click", function (e) {
-      if (e.target.closest("#prev") || e.target.closest("#next")) return;
-
-      const center = window.innerWidth / 2;
-      if (e.clientX > center) {
-        $("#flipbook").turn("next");
-      } else {
-        $("#flipbook").turn("previous");
-      }
-    });
-
-    // 페이지에 따라 버튼 표시 제어
-    function updateButtons() {
-      const total = $("#flipbook").turn("pages");
-      const current = $("#flipbook").turn("page");
-      const display = $("#flipbook").turn("display");
-
-      if (display === "single") {
-        $("#prev").toggle(current > 1);
-        $("#next").toggle(current < total);
-      } else {
-        // double 모드일 때: 페이지 페어 기준으로 판단
-        const lastView = $("#flipbook").turn("view");
-        $("#prev").toggle(current > 2);
-        $("#next").toggle(Math.max(...lastView) < total);
-      }
-    }
-
-    $("#flipbook").bind("turned", function () {
-      updateButtons();
-    });
-
-    $(document).ready(function () {
-      waitForImages(() => {
-        setFlipbookSize();
-        updateButtons();
-      });
-    });
-
-    $(window).resize(function () {
-      setFlipbookSize();
-      updateButtons();
-    });
-</script>
+    const pages = [
+    "<div class='page'><img src='01.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='02.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='03.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='04.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='05.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='06.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='07.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='08.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='09.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='10.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='11.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='12.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='13.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='14.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='15.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='16.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='17.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='18.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='19.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='20.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='21.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='22.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='23.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='24.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='25.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='26.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='27.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='28.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='29.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='30.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='31.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='32.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='33.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='34.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='35.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='36.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='37.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='38.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='39.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='40.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='41.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='42.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='43.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='44.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='45.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='46.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='47.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='48.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='49.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='50.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='51.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='52.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='53.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='54.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='55.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='56.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='57.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='58.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='59.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='60.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='61.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='62.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='63.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='64.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='65.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='66.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='67.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='68.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='69.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='70.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='71.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='72.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='73.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='74.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='75.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='76.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='77.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='78.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='79.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='80.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='81.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='82.jpg' loading='lazy' /></div>"
+    "<div class='page'><img src='83.jpg' loading='lazy' /></div>"
+    ];
 
     function getDisplayMode() {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const isPortrait = window.innerHeight > window.innerWidth;
-
-      if (!isMobile) return 'double'; // PC는 무조건 double
+      if (!isMobile) return 'double';
       return isPortrait ? 'single' : 'double';
     }
 
-    function setFlipbookSize() {
-      const maxWidth = 800;
+    function buildFlipbook() {
+      $("#flipbook").html(pages.join("\n"));
+    }
+
+    function initializeFlipbook() {
+      const maxWidth = 1000;
       const screenWidth = window.innerWidth;
       const width = Math.min(screenWidth * 0.95, maxWidth);
       const height = width * 1.3;
       const displayMode = getDisplayMode();
 
       if ($("#flipbook").data("turn")) {
-        $("#flipbook").turn("destroy").html($("#flipbook").html());
+        $("#flipbook").turn("destroy").html(pages.join("\n"));
       }
 
       $("#flipbook").turn({
@@ -233,40 +198,68 @@
         gradients: true,
         acceleration: true,
         turnCorners: "",
-        when: { turning: function(e, page, view) { e.stopPropagation(); } }
+        when: {
+          turning: function(e, page, view) { e.stopPropagation(); }
+        }
       });
     }
 
     function waitForImages(callback) {
       const imgs = $("#flipbook img");
       let loaded = 0;
-
       imgs.each(function () {
         if (this.complete) {
           loaded++;
         } else {
-          $(this).on("load", function () {
-            loaded++;
-            if (loaded === imgs.length) callback();
-          });
-          $(this).on("error", function () {
+          $(this).on("load error", function () {
             loaded++;
             if (loaded === imgs.length) callback();
           });
         }
       });
-
       if (loaded === imgs.length) callback();
     }
 
-    $(document).ready(function () {
-      waitForImages(() => {
-        setFlipbookSize();
-      });
-    });
+    function updateButtons() {
+      const total = $("#flipbook").turn("pages");
+      const current = $("#flipbook").turn("page");
+      const display = $("#flipbook").turn("display");
+      const view = $("#flipbook").turn("view");
 
-    $(window).resize(function () {
-      setFlipbookSize();
+      $("#prev").toggle(current > 1 && (display === 'single' || Math.min(...view) > 1));
+      $("#next").toggle(current < total && (display === 'single' || Math.max(...view) < total));
+    }
+
+    $(document).ready(function () {
+      buildFlipbook();
+      waitForImages(() => {
+        initializeFlipbook();
+        updateButtons();
+      });
+
+      $("#prev").on("click touchstart", function () {
+        $("#flipbook").turn("previous");
+      });
+      $("#next").on("click touchstart", function () {
+        $("#flipbook").turn("next");
+      });
+      $(window).on("resize orientationchange", function () {
+        initializeFlipbook();
+        updateButtons();
+      });
+      $("#flipbook").on("turned", function () {
+        updateButtons();
+      });
+
+      document.addEventListener("click", function (e) {
+        if (e.target.closest("button")) return;
+        const center = window.innerWidth / 2;
+        if (e.clientX > center) {
+          $("#flipbook").turn("next");
+        } else {
+          $("#flipbook").turn("previous");
+        }
+      });
     });
   </script>
 
