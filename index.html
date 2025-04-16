@@ -63,3 +63,160 @@
       bottom: 50px;
       width: 100%;
       background: rgba(255,255,255,0.95);
+      z-index: 999;
+      padding: 10px 0;
+    }
+    .nav-buttons button {
+      font-size: 16px;
+      padding: 10px 24px;
+      margin: 0 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+    .nav-buttons button:hover {
+      background-color: #555;
+    }
+    .page-number {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 5px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>📖 카달로그</h1>
+  <a href="https://www.bestnail.kr" target="_blank" class="shop-button">
+    <img src="비에스트 로고(딱맞게).png" alt="로고" style="height: 24px; vertical-align: middle; margin-right: 8px;">
+    쇼핑몰
+  </a>
+</div>
+
+<div id="flipbook">
+  <!-- 페이지 삽입 -->
+</div>
+
+<div class="nav-buttons">
+  <button id="prev">⬅ 이전</button>
+  <span class="page-number" id="page-number">1 / 83</span>
+  <button id="next">다음 ➡</button>
+</div>
+
+<script>
+  const pages = [];
+  for (let i = 1; i <= 83; i++) {
+    const num = i.toString().padStart(2, '0');
+    pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
+  }
+
+  function getDisplayMode() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const isPortrait = window.innerHeight > window.innerWidth;
+    return isMobile ? (isPortrait ? 'single' : 'double') : 'double';
+  }
+
+  function buildFlipbook() {
+    $("#flipbook").html(pages.join("\n"));
+  }
+
+  function initializeFlipbook() {
+    const maxWidth = 1000;
+    const screenWidth = window.innerWidth;
+    const width = Math.min(screenWidth * 0.95, maxWidth);
+    const height = width * 1.3;
+    const displayMode = getDisplayMode();
+
+    if ($("#flipbook").data("turn")) {
+      $("#flipbook").turn("destroy").html(pages.join("\n"));
+    }
+
+    $("#flipbook").turn({
+      width: displayMode === 'single' ? width : width * 2,
+      height: height,
+      autoCenter: true,
+      display: displayMode,
+      gradients: false,
+      acceleration: true
+    });
+  }
+
+  function waitForImages(callback) {
+    const imgs = $("#flipbook img");
+    let loaded = 0;
+    imgs.each(function () {
+      if (this.complete) {
+        loaded++;
+      } else {
+        $(this).on("load error", function () {
+          loaded++;
+          if (loaded === imgs.length) callback();
+        });
+      }
+    });
+    if (loaded === imgs.length) callback();
+  }
+
+  function updateButtons() {
+    const total = $("#flipbook").turn("pages");
+    const current = $("#flipbook").turn("page");
+    const display = $("#flipbook").turn("display");
+    const view = $("#flipbook").turn("view");
+    const pageText = display === 'single' ? `${current} / ${total}` : `${Math.min(...view)}-${Math.max(...view)} / ${total}`;
+    document.getElementById("page-number").textContent = pageText;
+    $("#prev").toggle(current > 1);
+    $("#next").toggle(current < total);
+  }
+
+  $(document).ready(function () {
+    buildFlipbook();
+    waitForImages(() => {
+      initializeFlipbook();
+      updateButtons();
+    });
+
+    $("#prev").on("click touchstart", () => $("#flipbook").turn("previous"));
+    $("#next").on("click touchstart", () => $("#flipbook").turn("next"));
+    $(window).on("resize orientationchange", () => {
+      initializeFlipbook();
+      updateButtons();
+    });
+    $("#flipbook").on("turned", updateButtons);
+
+    // 클릭으로 넘기기
+    document.addEventListener("click", function (e) {
+      const fb = document.getElementById("flipbook");
+      if (!fb.contains(e.target)) return;
+
+      const displayMode = $("#flipbook").turn("display");
+      const x = e.clientX || e.touches?.[0]?.clientX;
+      const center = window.innerWidth / 2;
+
+      if (displayMode === 'single') {
+        if (x > center) {
+          $("#flipbook").turn("next");
+        } else {
+          $("#flipbook").turn("previous");
+        }
+      } else {
+        const rect = fb.getBoundingClientRect();
+        const flipX = e.clientX - rect.left;
+        const half = rect.width / 2;
+        if (flipX > half) {
+          $("#flipbook").turn("next");
+        } else {
+          $("#flipbook").turn("previous");
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
