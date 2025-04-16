@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <title>카달로그 플립북</title>
+  <title>카달로그 플립북 - 반응형</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
@@ -40,13 +40,17 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
     .page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
       width: 100%;
       height: 100%;
     }
     .page img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain; background-color: white;
     }
   </style>
 </head>
@@ -144,16 +148,32 @@
   </div>
 
   <script>
+    function getDisplayMode() {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const isPortrait = window.innerHeight > window.innerWidth;
+
+      if (!isMobile) return 'double'; // PC는 무조건 double
+      return isPortrait ? 'single' : 'double';
+    }
+
     function setFlipbookSize() {
       const maxWidth = 800;
       const screenWidth = window.innerWidth;
       const width = Math.min(screenWidth * 0.95, maxWidth);
       const height = width * 1.3;
+      const displayMode = getDisplayMode();
+
+      if ($("#flipbook").data("turn")) {
+        $("#flipbook").turn("destroy").html($("#flipbook").html());
+      }
 
       $("#flipbook").turn({
-        width: width,
+        width: displayMode === 'single' ? width : width * 2,
         height: height,
-        autoCenter: true
+        autoCenter: true,
+        display: displayMode,
+        gradients: true,
+        acceleration: true
       });
     }
 
@@ -186,10 +206,7 @@
     });
 
     $(window).resize(function () {
-      if ($("#flipbook").data("turn")) {
-        $("#flipbook").turn("destroy").html($("#flipbook").html());
-        setFlipbookSize();
-      }
+      setFlipbookSize();
     });
   </script>
 
