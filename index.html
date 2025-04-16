@@ -12,8 +12,6 @@
       font-family: 'Segoe UI', sans-serif;
       background: #f9f9f9;
     }
-
-    /* 상단 메뉴바 */
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -22,12 +20,10 @@
       color: white;
       padding: 10px 20px;
     }
-
     .navbar h1 {
       font-size: 20px;
       margin: 0;
     }
-
     .navbar a {
       color: white;
       text-decoration: none;
@@ -36,21 +32,17 @@
       padding: 6px 12px;
       border-radius: 5px;
     }
-
     .navbar a:hover {
       background-color: #777;
     }
-
     #flipbook {
       margin: 20px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-
     .page {
       width: 100%;
       height: 100%;
     }
-
     .page img {
       width: 100%;
       height: 100%;
@@ -60,13 +52,11 @@
 </head>
 <body>
 
-  <!-- 상단 메뉴바 -->
   <div class="navbar">
     <h1>📖 카달로그</h1>
-    <a href="/">🏠 홈</a>
+    <a href="https://bestnail2012.github.io/">🏠 홈</a>
   </div>
 
-  <!-- 플립북 영역 -->
   <div id="flipbook">
       <div class="page"><img src="01.jpg" /></div>
       <div class="page"><img src="02.jpg" /></div>
@@ -160,7 +150,6 @@
       const width = Math.min(screenWidth * 0.95, maxWidth);
       const height = width * 1.3;
 
-      $("#flipbook").turn("destroy").html($("#flipbook").html());
       $("#flipbook").turn({
         width: width,
         height: height,
@@ -168,12 +157,39 @@
       });
     }
 
+    function waitForImages(callback) {
+      const imgs = $("#flipbook img");
+      let loaded = 0;
+
+      imgs.each(function () {
+        if (this.complete) {
+          loaded++;
+        } else {
+          $(this).on("load", function () {
+            loaded++;
+            if (loaded === imgs.length) callback();
+          });
+          $(this).on("error", function () {
+            loaded++;
+            if (loaded === imgs.length) callback();
+          });
+        }
+      });
+
+      if (loaded === imgs.length) callback();
+    }
+
     $(document).ready(function () {
-      setFlipbookSize();
+      waitForImages(() => {
+        setFlipbookSize();
+      });
     });
 
     $(window).resize(function () {
-      setFlipbookSize();
+      if ($("#flipbook").data("turn")) {
+        $("#flipbook").turn("destroy").html($("#flipbook").html());
+        setFlipbookSize();
+      }
     });
   </script>
 
