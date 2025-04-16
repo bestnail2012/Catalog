@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <title>카달로그 플립북 - 로고버전</title>
+  <title>카달로그 플립북 - 페이지 번호 & 버튼 스타일 개선</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
@@ -56,14 +56,32 @@
     .nav-buttons {
       text-align: center;
       position: fixed;
-      bottom: 20px;
+      bottom: 50px;
       width: 100%;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.95);
       z-index: 999;
+      padding: 10px 0;
     }
     .nav-buttons button {
-      font-size: 18px;
-      padding: 10px 20px;
+      font-size: 16px;
+      padding: 10px 24px;
+      margin: 0 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+    .nav-buttons button:hover {
+      background-color: #555;
+    }
+    .page-number {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 5px;
+      color: #555;
     }
   </style>
 </head>
@@ -78,6 +96,7 @@
 
   <div class="nav-buttons">
     <button id="prev">⬅ 이전</button>
+    <span class="page-number" id="page-number">1 / 83</span>
     <button id="next">다음 ➡</button>
   </div>
 
@@ -225,6 +244,9 @@
       const current = $("#flipbook").turn("page");
       const display = $("#flipbook").turn("display");
       const view = $("#flipbook").turn("view");
+      const pageText = display === 'single' ? `${current} / ${total}` : `${Math.min(...view)}-$${Math.max(...view)} / ${total}`;
+
+      document.getElementById("page-number").textContent = pageText;
 
       $("#prev").toggle(current > 1 && (display === 'single' || Math.min(...view) > 1));
       $("#next").toggle(current < total && (display === 'single' || Math.max(...view) < total));
