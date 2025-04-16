@@ -69,10 +69,9 @@
       align-items: center;
     }
 
-    #intro h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: #333;
+    #intro img {
+      width: 200px;
+      margin-bottom: 30px;
     }
 
     #intro button {
@@ -140,13 +139,13 @@
 </head>
 <body>
 
-  <!-- ✅ 인트로 페이지 -->
+  <!-- 인트로 화면 -->
   <div id="intro">
-    <h1>비에스트 카달로그</h1>
+    <img src="logo.png" alt="로고">
     <button onclick="startCatalog()">카달로그 시작하기</button>
   </div>
 
-  <!-- ✅ 상단 메뉴 -->
+  <!-- 상단 메뉴 -->
   <div class="navbar">
     <div class="navbar-left">비에스트 카달로그</div>
     <div class="navbar-right">
@@ -158,25 +157,25 @@
     </div>
   </div>
 
-  <!-- ✅ 플립북 -->
+  <!-- 플립북 -->
   <div id="flipbook"></div>
 
-  <!-- ✅ 하단 네비게이션 버튼 -->
+  <!-- 페이지 이동 버튼 -->
   <div class="nav-buttons">
     <button id="prev">⬅ 이전</button>
-    <span class="page-number" id="page-number">1 / 83</span>
+    <span class="page-number" id="page-number">1 / 84</span>
     <button id="next">다음 ➡</button>
   </div>
 
-  <!-- ✅ 책 넘기기 효과음 -->
+  <!-- 책 넘기기 소리 -->
   <audio id="flipSound" src="page-flip.mp3" preload="auto"></audio>
 
   <script>
-    const totalPages = 83;
+    const totalPages = 84;
     const pages = [];
     let soundEnabled = true;
 
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 0; i < totalPages; i++) {
       const num = String(i).padStart(2, '0');
       pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
     }
@@ -244,8 +243,8 @@
         : `${current} / ${total}`;
 
       $("#page-number").text(text);
-      $("#prev").toggle(current > 1);
-      $("#next").toggle(current < total);
+      $("#prev").css("display", current > 1 ? "inline-block" : "none");
+      $("#next").css("display", current < total ? "inline-block" : "none");
     }
 
     function startCatalog() {
@@ -285,7 +284,6 @@
 
         if ($("#flipbook").turn("animating")) return;
 
-        const display = $("#flipbook").turn("display");
         const rect = flipbook.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const mid = rect.width / 2;
