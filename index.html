@@ -58,7 +58,7 @@
 
   <div class="navbar">
     <h1>📖 카달로그</h1>
-    <a href="https://www.bestnail.kr" target="_blank">🛒 쇼핑몰</a>
+    <a href="https://bestnail2012.github.io/">🏠 홈</a>
   </div>
 
   <div id="flipbook">
@@ -145,9 +145,21 @@
       <div class="page"><img src="81.jpg" /></div>
       <div class="page"><img src="82.jpg" /></div>
       <div class="page"><img src="83.jpg" /></div>
-  </div>
+  
+    <!-- 화살표 버튼 -->
+    <div style="text-align: center; margin-top: 10px;">
+      <button id="prev" style="font-size: 18px; padding: 10px 20px;">⬅ 이전</button>
+      <button id="next" style="font-size: 18px; padding: 10px 20px;">다음 ➡</button>
+    </div>
 
   <script>
+    $("#prev").on("click", function () {
+      $("#flipbook").turn("previous");
+    });
+    $("#next").on("click", function () {
+      $("#flipbook").turn("next");
+    });
+
     function getDisplayMode() {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const isPortrait = window.innerHeight > window.innerWidth;
@@ -157,7 +169,7 @@
     }
 
     function setFlipbookSize() {
-      const maxWidth = 800;
+      const maxWidth = 1000;
       const screenWidth = window.innerWidth;
       const width = Math.min(screenWidth * 0.95, maxWidth);
       const height = width * 1.3;
