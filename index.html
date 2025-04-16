@@ -114,7 +114,7 @@
     <button id="next">다음 ➡</button>
   </div>
 
-  <!-- ✅ 책 넘기는 효과음 -->
+  <!-- 책 넘기기 소리 -->
   <audio id="flipSound" src="page-flip.mp3" preload="auto"></audio>
 
   <script>
@@ -194,21 +194,26 @@
 
       $("#prev").on("click", () => {
         $("#flipbook").turn("previous");
-        playFlipSound(); // ⬅ 효과음
+        playFlipSound();
       });
 
       $("#next").on("click", () => {
         $("#flipbook").turn("next");
-        playFlipSound(); // ⬅ 효과음
+        playFlipSound();
       });
 
+      let lastWidth = window.innerWidth;
+
       $(window).on("resize orientationchange", () => {
-        initializeFlipbook();
+        if (Math.abs(window.innerWidth - lastWidth) > 50) {
+          lastWidth = window.innerWidth;
+          initializeFlipbook(); // 리사이즈 차이가 클 때만 재초기화
+        }
       });
 
       $("#flipbook").on("turned", () => {
         updateButtons();
-        playFlipSound(); // ⬅ 효과음
+        playFlipSound();
       });
 
       document.addEventListener("click", function (e) {
@@ -220,13 +225,15 @@
         const x = e.clientX - rect.left;
         const mid = rect.width / 2;
 
+        if ($("#flipbook").turn("animating")) return;
+
         if (x > mid) {
           $("#flipbook").turn("next");
         } else {
           $("#flipbook").turn("previous");
         }
 
-        playFlipSound(); // ⬅ 효과음
+        playFlipSound();
       });
     });
   </script>
