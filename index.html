@@ -22,9 +22,14 @@
       padding: 10px 20px;
     }
 
-    .navbar h1 {
+    .navbar-left {
       font-size: 20px;
-      margin: 0;
+    }
+
+    .navbar-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     .navbar a {
@@ -41,6 +46,43 @@
     .navbar a img {
       height: 24px;
       margin-right: 8px;
+    }
+
+    .sound-toggle {
+      background-color: white;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 5px;
+    }
+
+    #intro {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #fff;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #intro h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    #intro button {
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
 
     #flipbook {
@@ -98,28 +140,41 @@
 </head>
 <body>
 
-  <div class="navbar">
+  <!-- ✅ 인트로 페이지 -->
+  <div id="intro">
     <h1>비에스트 카달로그</h1>
-    <a href="https://www.bestnail.kr" target="_blank">
-      <img src="비에스트 로고(딱맞게).png" alt="로고">
-      쇼핑몰
-    </a>
+    <button onclick="startCatalog()">카달로그 시작하기</button>
   </div>
 
+  <!-- ✅ 상단 메뉴 -->
+  <div class="navbar">
+    <div class="navbar-left">비에스트 카달로그</div>
+    <div class="navbar-right">
+      <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
+      <a href="https://www.bestnail.kr" target="_blank">
+        <img src="비에스트 로고(딱맞게).png" alt="로고">
+        쇼핑몰
+      </a>
+    </div>
+  </div>
+
+  <!-- ✅ 플립북 -->
   <div id="flipbook"></div>
 
+  <!-- ✅ 하단 네비게이션 버튼 -->
   <div class="nav-buttons">
     <button id="prev">⬅ 이전</button>
     <span class="page-number" id="page-number">1 / 83</span>
     <button id="next">다음 ➡</button>
   </div>
 
-  <!-- 책 넘기기 소리 -->
+  <!-- ✅ 책 넘기기 효과음 -->
   <audio id="flipSound" src="page-flip.mp3" preload="auto"></audio>
 
   <script>
     const totalPages = 83;
     const pages = [];
+    let soundEnabled = true;
 
     for (let i = 1; i <= totalPages; i++) {
       const num = String(i).padStart(2, '0');
@@ -138,10 +193,15 @@
 
     function playFlipSound() {
       const audio = document.getElementById("flipSound");
-      if (audio) {
+      if (soundEnabled && audio) {
         audio.currentTime = 0;
         audio.play().catch(() => {});
       }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById("soundToggle").textContent = soundEnabled ? "🔊" : "🔇";
     }
 
     function initializeFlipbook() {
@@ -188,10 +248,13 @@
       $("#next").toggle(current < total);
     }
 
-    $(document).ready(function () {
+    function startCatalog() {
+      document.getElementById("intro").style.display = "none";
       buildFlipbook();
       initializeFlipbook();
+    }
 
+    $(document).ready(function () {
       $("#prev").on("click", () => {
         $("#flipbook").turn("previous");
         playFlipSound();
@@ -207,7 +270,7 @@
       $(window).on("resize orientationchange", () => {
         if (Math.abs(window.innerWidth - lastWidth) > 50) {
           lastWidth = window.innerWidth;
-          initializeFlipbook(); // 리사이즈 차이가 클 때만 재초기화
+          initializeFlipbook();
         }
       });
 
@@ -220,12 +283,12 @@
         const flipbook = document.getElementById("flipbook");
         if (!flipbook.contains(e.target)) return;
 
+        if ($("#flipbook").turn("animating")) return;
+
         const display = $("#flipbook").turn("display");
         const rect = flipbook.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const mid = rect.width / 2;
-
-        if ($("#flipbook").turn("animating")) return;
 
         if (x > mid) {
           $("#flipbook").turn("next");
