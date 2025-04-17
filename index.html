@@ -60,11 +60,11 @@
       gap: 4px; flex-wrap: nowrap; overflow-x: auto;
     }
     .nav-buttons button {
-      font-size: 14px; padding: 6px 10px; background-color: #333; color: white; border: none;
+      font-size: 18px; padding: 6px 10px; background-color: #333; color: white; border: none;
       border-radius: 20px; cursor: pointer; transition: background 0.3s; white-space: nowrap;
     }
     .nav-buttons button:hover { background-color: #555; }
-    .page-number { font-size: 13px; color: #555; white-space: nowrap; }
+    .page-number { font-size: 16px; color: #555; white-space: nowrap; }
     .page-input {
       width: 40px; padding: 4px; font-size: 13px; border-radius: 5px; border: 1px solid #ccc;
     }
@@ -76,7 +76,7 @@
     }
   </script>
 </head>
-<body onload="startCatalog()">
+<body>
 
 <div id="intro">
   <h1>B-EST</h1>
@@ -143,7 +143,7 @@ let orientationReloaded = false;
 function buildPages() {
   for (let i = 1; i <= totalPages; i++) {
     const num = String(i).padStart(2, '0');
-    pages.push(`<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:14px; color:#555;'>-${i}-</div></div></div>`);
+    pages.push(`<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
   }
 }
 
@@ -167,7 +167,7 @@ function waitForImages(callback) {
   });
 }
 
-function initializeFlipbook(startPage = 1) {
+function initializeFlipbook(startPage = 1, disableAnimation = false) {
   $("#loading").show();
   const flipbook = $("#flipbook");
   if (flipbook.data("turn")) flipbook.turn("destroy").html("");
@@ -180,6 +180,7 @@ function initializeFlipbook(startPage = 1) {
   flipbook.html(pages.join(""));
   waitForImages(() => {
     flipbook.turn({
+      duration: disableAnimation ? 0 : 1200,
       width: displayMode === 'single' ? width : width * 2,
       height: height,
       display: displayMode,
@@ -226,11 +227,16 @@ function toggleSound() {
 }
 
 function startCatalog() {
-  document.getElementById("intro").style.display = "none";
   const saved = localStorage.getItem('lastPage');
   if (saved) {
     lastPage = parseInt(saved);
+    buildPages();
+    initializeFlipbook(lastPage, true);
+    document.getElementById("intro").style.display = "none";
+  } else {
+    document.getElementById("intro").style.display = "flex";
   }
+}
   buildPages();
   initializeFlipbook(lastPage);
 }
