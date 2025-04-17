@@ -28,14 +28,19 @@
       display: flex; align-items: center; gap: 12px; margin-left: auto;
     }
 
-    .navbar a, .sound-toggle {
+    .navbar a {
       background-color: white; color: black; text-decoration: none;
       font-size: 16px; padding: 6px 12px; border-radius: 5px;
       display: flex; align-items: center;
-      height: 36px; /* 쇼핑몰 버튼과 동일 높이 */
     }
 
     .navbar a img { height: 24px; margin-right: 6px; }
+
+    .sound-toggle {
+      background-color: white; font-size: 18px; border: none;
+      cursor: pointer; padding: 6px 12px; border-radius: 5px;
+      height: 36px;
+    }
 
     #intro {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999;
@@ -82,30 +87,28 @@
     @media (max-width: 600px) {
       .page-number-display { font-size: 9px !important; }
 
-      .navbar-left { justify-content: flex-start; }
+      .navbar-left {
+        justify-content: flex-start;
+      }
+
       .navbar-left span {
         font-size: 13px !important;
         margin-left: -10px !important;
         font-weight: bold;
       }
 
-      .navbar-right { justify-content: flex-end; }
+      .navbar-right {
+        justify-content: flex-end;
+      }
 
       .sound-toggle {
-        font-size: 14px !important;
+        font-size: 12px !important;
         padding: 2px 6px !important;
-        height: 36px !important;
       }
 
       .navbar a {
         font-size: 12px !important;
         padding: 2px 6px !important;
-        height: 36px !important;
-      }
-
-      .page {
-        justify-content: center;
-        align-items: center;
       }
     }
 
@@ -128,28 +131,15 @@
   </style>
 
   <script>
-    let prevOrient = window.screen.orientation ? window.screen.orientation.type : window.orientation;
-    window.addEventListener("orientationchange", () => {
+    let previousOrientation = window.orientation;
+    window.addEventListener("orientationchange", function () {
       setTimeout(() => {
-        const curr = window.screen.orientation ? window.screen.orientation.type : window.orientation;
-        if (curr !== prevOrient) {
-          prevOrient = curr;
+        if (window.orientation !== previousOrientation) {
+          previousOrientation = window.orientation;
           localStorage.setItem("skipAnimation", "true");
           location.reload();
         }
       }, 300);
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const skip = localStorage.getItem("skipAnimation") === "true";
-      $('#flipbook').turn({
-        acceleration: true,
-        display: 'double',
-        gradients: !skip,
-        autoCenter: true,
-        duration: skip ? 0 : 600
-      });
-      localStorage.removeItem("skipAnimation");
     });
   </script>
 </head>
@@ -167,7 +157,7 @@
 </div>
 
 <div class="navbar">
-  <div class="navbar-left"><span>B-EST CATALOG</span></div>
+  <div class="navbar-left"><b>B-EST CATALOG</b></div>
   <div class="navbar-right">
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
     <a href="https://www.bestnail.kr" target="_blank">
@@ -217,7 +207,9 @@ function waitForImages(callback) {
       });
     }
   });
-  setTimeout(() => { if (loaded < imgs.length) callback(); }, 5000);
+  setTimeout(() => {
+    if (loaded < imgs.length) callback();
+  }, 5000);
 }
 
 function getDisplayMode() {
@@ -226,15 +218,19 @@ function getDisplayMode() {
 
 function initializeFlipbook(startPage = 1, disableAnimation = false) {
   $("#loading").show();
+
   const flipbook = $("#flipbook");
   if (flipbook.data("turn")) flipbook.turn("destroy").html("");
+
   const screenWidth = window.innerWidth;
   const maxWidth = 1200;
   const width = Math.min(screenWidth * 0.95, maxWidth);
   const height = width * 1.3;
   const displayMode = getDisplayMode();
   currentDisplayMode = displayMode;
+
   flipbook.html(pages.join(""));
+
   waitForImages(() => {
     try {
       flipbook.turn({
@@ -246,20 +242,19 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
         gradients: true,
         elevation: 50,
         acceleration: true,
-        corners: (screenWidth <= 600) ? '' : 'all'
+        corners: (screenWidth <= 600) ? '' : 'all' // 모바일에서는 모서리 넘김 제거
       }).turn("page", startPage);
       updateButtons();
-    } catch (e) { console.error("Flipbook 초기화 오류", e); }
+    } catch (e) {
+      console.error("Flipbook 초기화 오류", e);
+    }
+
     $("#loading").hide();
   });
-  setTimeout(() => { $("#loading").hide(); }, 5000);
-  $("#flipbook").off("click").on("click", function (e) {
-    const rect = this.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    if (x > rect.width / 2) flipbook.turn("next"); else flipbook.turn("previous");
-    playFlipSound();
-  });
-  $("#flipbook").off("turned").on("turned", () => { updateButtons(); playFlipSound(); });
+
+  setTimeout(() => {
+    $("#loading").hide();
+  }, 5000);
 }
 
 function updateButtons() {
@@ -277,9 +272,16 @@ function playFlipSound() {
 }
 
 function toggleSound() {
-  if (soundLevel === 0.5) { soundLevel = 0; document.getElementById("soundToggle").textContent = "🔇"; }
-  else if (soundLevel === 0) { soundLevel = 1; document.getElementById("soundToggle").textContent = "🔊"; }
-  else { soundLevel = 0.5; document.getElementById("soundToggle").textContent = "🔉"; }
+  if (soundLevel === 0.5) {
+    soundLevel = 0;
+    document.getElementById("soundToggle").textContent = "🔇";
+  } else if (soundLevel === 0) {
+    soundLevel = 1;
+    document.getElementById("soundToggle").textContent = "🔊";
+  } else {
+    soundLevel = 0.5;
+    document.getElementById("soundToggle").textContent = "🔉";
+  }
 }
 
 function startCatalog() {
@@ -291,14 +293,11 @@ function startCatalog() {
 }
 
 $(document).ready(function () {
-  ["#first", "#prev", "#next", "#last"].forEach(id => {
-    $(id).off("click").on("click", () => { 
-      const action = id === "#first" ? 1 : id === "#last" ? totalPages : id === "#prev" ? "previous" : "next";
-      if (typeof action === 'number') $("#flipbook").turn("page", action);
-      else $("#flipbook").turn(action);
-      playFlipSound();
-    });
-  });
+  $("#first").click(() => { $("#flipbook").turn("page", 1); playFlipSound(); });
+  $("#last").click(() => { $("#flipbook").turn("page", totalPages); playFlipSound(); });
+  $("#prev").click(() => { $("#flipbook").turn("previous"); playFlipSound(); });
+  $("#next").click(() => { $("#flipbook").turn("next"); playFlipSound(); });
+
   $("#pageSlider").on("input change", function () {
     const val = parseInt(this.value);
     if (!isNaN(val) && val >= 1 && val <= totalPages) {
@@ -306,9 +305,22 @@ $(document).ready(function () {
       playFlipSound();
     }
   });
+
+  $("#flipbook").on("click", function (e) {
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x > rect.width / 2) {
+      $("#flipbook").turn("next");
+    } else {
+      $("#flipbook").turn("previous");
+    }
+    playFlipSound();
+  });
+
   $(window).on("resize orientationchange", () => {
-    if (window.innerWidth <= 600) location.reload();
-    else {
+    if (window.innerWidth <= 600) {
+      location.reload(); // 모바일에서 새로고침
+    } else {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         const newMode = getDisplayMode();
@@ -320,6 +332,18 @@ $(document).ready(function () {
       }, 300);
     }
   });
+
+  $("#flipbook").on("turned", () => {
+    updateButtons();
+    playFlipSound();
+  });
+
+  const savedPage = localStorage.getItem('lastPage');
+  if (savedPage) {
+    startCatalog();
+  } else {
+    document.getElementById("intro").style.display = "flex";
+  }
 });
 </script>
 
