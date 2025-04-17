@@ -151,9 +151,15 @@ function waitForImages(callback) {
 }
 
 function initializeFlipbook(startPage = 1, disableAnimation = false) {
-  $("#loading").show();
+  if (!disableAnimation) {
+    $("#loading").show();
+  } else {
+    $("#loading").hide(); // 리사이즈 시 로딩 숨김
+  }
+
   const flipbook = $("#flipbook");
   if (flipbook.data("turn")) flipbook.turn("destroy").html("");
+
   const screenWidth = window.innerWidth;
   const maxWidth = 1200;
   const width = Math.min(screenWidth * 0.95, maxWidth);
@@ -164,7 +170,7 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
   waitForImages(() => {
     try {
       flipbook.turn({
-        duration: disableAnimation ? 0 : 1200,
+        duration: disableAnimation ? 0 : 1200, // 애니메이션 제거 여부
         width: displayMode === 'single' ? width : width * 2,
         height: height,
         display: displayMode,
@@ -177,13 +183,15 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
     } catch (e) {
       console.error("Flipbook 초기화 오류", e);
     }
-    $("#loading").hide();
-  });
-  setTimeout(() => {
-    if ($("#loading").is(":visible")) {
+
+    if (!disableAnimation) {
       $("#loading").hide();
     }
-  }, 8000);
+  });
+
+  setTimeout(() => {
+    $("#loading").hide();
+  }, 5000);
 }
 
 function updateButtons() {
@@ -247,12 +255,13 @@ $(document).ready(function () {
   });
 
   $(window).on("resize orientationchange", () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      localStorage.setItem('lastPage', lastPage);
-      location.reload();
-    }, 300);
-  });
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    lastPage = $("#flipbook").turn("page");
+    $("#flipbook").turn("destroy"); // 기존 플립북 제거
+    initializeFlipbook(lastPage, true); // 다시 초기화 (애니메이션 제거)
+  }, 300);
+});
 
   $("#flipbook").on("turned", () => {
     updateButtons();
