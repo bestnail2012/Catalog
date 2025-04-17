@@ -57,11 +57,11 @@
     }
     .page-number-display {
       position: absolute; bottom: 10px; width: 100%; text-align: center;
-      font-size: 20px; font-weight: bold; color: #555;
+      font-size: 16px; font-weight: bold; color: #555;
     }
     @media (max-width: 600px) {
       .page-number-display {
-        font-size: 14px !important;
+        font-size: 12px !important;
       }
     }
     .nav-buttons {
@@ -122,7 +122,7 @@ const pages = [];
 let soundLevel = 0.5;
 let resizeTimeout;
 let lastPage = 1;
-let orientationReloaded = false;
+let isInitialLoad = true; // 새로고침 감지용
 
 function buildPages() {
   pages.length = 0;
@@ -150,7 +150,7 @@ function waitForImages(callback) {
   }, 5000);
 }
 
-function initializeFlipbook(startPage = 1, disableAnimation = false) {
+function initializeFlipbook(startPage = 1) {
   $("#loading").show();
   const flipbook = $("#flipbook");
   if (flipbook.data("turn")) flipbook.turn("destroy").html("");
@@ -164,7 +164,7 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
   waitForImages(() => {
     try {
       flipbook.turn({
-        duration: disableAnimation ? 0 : 1200,
+        duration: isInitialLoad ? 0 : 1200,
         width: displayMode === 'single' ? width : width * 2,
         height: height,
         display: displayMode,
@@ -194,6 +194,7 @@ function updateButtons() {
 }
 
 function playFlipSound() {
+  if (isInitialLoad) return; // 새로고침 후 초기 넘김에는 소리 생략
   const audio = document.getElementById("flipSound");
   audio.volume = soundLevel;
   audio.currentTime = 0;
@@ -257,6 +258,7 @@ $(document).ready(function () {
   $("#flipbook").on("turned", () => {
     updateButtons();
     playFlipSound();
+    isInitialLoad = false; // 첫 페이지 넘김 후부터 소리 허용
   });
 
   const savedPage = localStorage.getItem('lastPage');
