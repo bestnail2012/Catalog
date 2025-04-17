@@ -99,16 +99,30 @@
 
       .navbar-right {
         justify-content: flex-end;
+        gap: 6px;
       }
 
       .sound-toggle {
-        font-size: 12px !important;
-        padding: 2px 6px !important;
+        font-size: 14px !important;
+        padding: 0 !important;
+        width: 36px !important;
+        height: 36px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .navbar a {
-        font-size: 12px !important;
-        padding: 2px 6px !important;
+        font-size: 14px !important;
+        padding: 6px 12px !important;
+        height: 36px !important;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar a img {
+        height: 20px !important;
+        margin-right: 4px;
       }
     }
 
@@ -242,7 +256,7 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
         gradients: true,
         elevation: 50,
         acceleration: true,
-        corners: (screenWidth <= 600) ? '' : 'all' // 모바일에서는 모서리 넘김 제거
+        corners: (screenWidth <= 600) ? '' : 'all'
       }).turn("page", startPage);
       updateButtons();
     } catch (e) {
@@ -319,7 +333,7 @@ $(document).ready(function () {
 
   $(window).on("resize orientationchange", () => {
     if (window.innerWidth <= 600) {
-      location.reload(); // 모바일에서 새로고침
+      location.reload();
     } else {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
