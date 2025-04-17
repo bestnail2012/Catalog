@@ -76,7 +76,7 @@
 
     @media (max-width: 600px) and (orientation: portrait) {
       .page-number-display {
-        font-size: 9px !important;
+        font-size: 9px;
       }
     }
 
@@ -147,7 +147,12 @@ function buildPages() {
   pages.length = 0;
   for (let i = 1; i <= totalPages; i++) {
     const num = String(i).padStart(2, '0');
-    pages.push(<div class='page'><img src='${num}.jpg' loading='lazy' /><div class='page-number-display'>-${i}-</div></div>);
+    pages.push(`
+      <div class='page'>
+        <img src='${num}.jpg' loading='lazy' />
+        <div class='page-number-display'>-${i}-</div>
+      </div>
+    `);
   }
 }
 
@@ -175,7 +180,6 @@ function getDisplayMode() {
 
 function initializeFlipbook(startPage = 1, disableAnimation = false) {
   $("#loading").show();
-
   const flipbook = $("#flipbook");
   if (flipbook.data("turn")) flipbook.turn("destroy").html("");
 
@@ -204,13 +208,29 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
     } catch (e) {
       console.error("Flipbook 초기화 오류", e);
     }
-
     $("#loading").hide();
   });
 
   setTimeout(() => {
     $("#loading").hide();
   }, 5000);
+
+  // click 이벤트도 여기서 안전하게 바인딩
+  $("#flipbook").off("click").on("click", function (e) {
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x > rect.width / 2) {
+      flipbook.turn("next");
+    } else {
+      flipbook.turn("previous");
+    }
+    playFlipSound();
+  });
+
+  $("#flipbook").off("turned").on("turned", () => {
+    updateButtons();
+    playFlipSound();
+  });
 }
 
 function updateButtons() {
@@ -241,8 +261,8 @@ function toggleSound() {
 }
 
 function startCatalog() {
-  const saved = localStorage.getItem('lastPage');
-  lastPage = saved ? parseInt(saved) : 1;
+  const saved = parseInt(localStorage.getItem('lastPage'));
+  lastPage = isNaN(saved) ? 1 : saved;
   document.getElementById("intro").style.display = "none";
   buildPages();
   initializeFlipbook(lastPage);
@@ -262,17 +282,6 @@ $(document).ready(function () {
     }
   });
 
-  $("#flipbook").on("click", function (e) {
-    const rect = this.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    if (x > rect.width / 2) {
-      $("#flipbook").turn("next");
-    } else {
-      $("#flipbook").turn("previous");
-    }
-    playFlipSound();
-  });
-
   $(window).on("resize orientationchange", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
@@ -285,13 +294,8 @@ $(document).ready(function () {
     }, 300);
   });
 
-  $("#flipbook").on("turned", () => {
-    updateButtons();
-    playFlipSound();
-  });
-
-  const savedPage = localStorage.getItem('lastPage');
-  if (savedPage) {
+  const savedPage = parseInt(localStorage.getItem('lastPage'));
+  if (!isNaN(savedPage)) {
     startCatalog();
   } else {
     document.getElementById("intro").style.display = "flex";
