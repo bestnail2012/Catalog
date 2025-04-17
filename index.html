@@ -14,9 +14,8 @@
       display: flex; justify-content: space-between; align-items: center;
       background-color: #333; color: white; padding: 10px 20px;
     }
-    .navbar-left, .navbar-right {
-      display: flex; align-items: center; gap: 12px;
-    }
+    .navbar-left { display: flex; align-items: center; gap: 12px; }
+    .navbar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
     .navbar a {
       background-color: white; color: black; text-decoration: none;
       font-size: 16px; padding: 6px 12px; border-radius: 5px;
@@ -40,9 +39,10 @@
     #loading {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(255,255,255,0.8); z-index: 9998;
-      display: flex; justify-content: center; align-items: center;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
     }
     #loading img { width: 60px; height: auto; }
+    #loading span { margin-top: 10px; font-size: 18px; color: #333; }
     #flipbook {
       margin: 20px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -80,11 +80,15 @@
 
 <div id="loading">
   <img src="비에스트 로고(딱맞게).png" alt="로딩 중..." />
+  <span>로딩 중...</span>
 </div>
 
 <div class="navbar">
   <div class="navbar-left">
     <span>비에스트 카달로그</span>
+  </div>
+  <div class="navbar-right">
+    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
     <a href="https://www.bestnail.kr" target="_blank">
       <img src="비에스트 로고(딱맞게).png" alt="로고">쇼핑몰
     </a>
@@ -112,6 +116,8 @@ const totalPages = 83;
 const pages = [];
 let soundLevel = 0.5;
 let resizeTimeout;
+let lastPage = 1;
+let orientationReloaded = false;
 
 function buildPages() {
   for (let i = 1; i <= totalPages; i++) {
@@ -165,6 +171,13 @@ function initializeFlipbook(startPage = 1) {
     updateButtons();
     $("#loading").hide();
   });
+
+  // 5초 후에도 로딩 화면이 보이면 새로고침
+  setTimeout(() => {
+    if ($("#loading").is(":visible")) {
+      location.reload();
+    }
+  }, 5000);
 }
 
 function updateButtons() {
@@ -174,6 +187,7 @@ function updateButtons() {
   $("#page-number").text(text);
   $("#prev").toggle(current > 1);
   $("#next").toggle(current < totalPages);
+  lastPage = current;
 }
 
 function playFlipSound() {
@@ -199,7 +213,7 @@ function toggleSound() {
 function startCatalog() {
   document.getElementById("intro").style.display = "none";
   buildPages();
-  initializeFlipbook();
+  initializeFlipbook(lastPage);
 }
 
 $(document).ready(function () {
@@ -223,9 +237,11 @@ $(document).ready(function () {
   $(window).on("resize orientationchange", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      const current = $("#flipbook").turn("page") || 1;
-      initializeFlipbook(current);
-    }, 300);
+      if (!orientationReloaded) {
+        orientationReloaded = true;
+        location.reload();
+      }
+    }, 200);
   });
 
   $("#flipbook").on("turned", () => {
@@ -233,15 +249,28 @@ $(document).ready(function () {
     playFlipSound();
   });
 
-  // 터치 스와이프 지원
-  document.getElementById("flipbook").addEventListener("touchstart", handleTouchStart, false);
-  document.getElementById("flipbook").addEventListener("touchmove", handleTouchMove, false);
+  // 마우스 클릭으로 페이지 넘김
+  document.addEventListener("click", function (e) {
+    const flipbook = document.getElementById("flipbook");
+    if (!flipbook.contains(e.target)) return;
+    if ($("#flipbook").turn("animating")) return;
+    const rect = flipbook.getBoundingClientRect();
+    const xRatio = (e.clientX - rect.left) / rect.width;
+    if (xRatio > 0.5) {
+      $("#flipbook").turn("next");
+    } else {
+      $("#flipbook").turn("previous");
+    }
+    playFlipSound();
+  });
 
+  // 터치 스와이프 지원 (모바일 & PC 터치 디바이스 공통)
   let xDown = null;
-  function handleTouchStart(evt) {
+  document.addEventListener("touchstart", function(evt) {
     xDown = evt.touches[0].clientX;
-  }
-  function handleTouchMove(evt) {
+  }, false);
+
+  document.addEventListener("touchmove", function(evt) {
     if (!xDown) return;
     const xUp = evt.touches[0].clientX;
     const xDiff = xDown - xUp;
@@ -253,7 +282,7 @@ $(document).ready(function () {
       }
       xDown = null;
     }
-  }
+  }, false);
 });
 </script>
 
