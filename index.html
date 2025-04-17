@@ -12,19 +12,19 @@
     body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
     .navbar {
       display: flex; justify-content: space-between; align-items: center;
-      background-color: #333; color: white; padding: 15px 25px;
+      background-color: #333; color: white; padding: 10px 20px;
     }
-    .navbar-left { display: flex; align-items: center; gap: 12px; font-weight: bold; font-size: 28px; }
-    .navbar-right { display: flex; align-items: center; gap: 20px; margin-left: auto; }
+    .navbar-left { display: flex; align-items: center; gap: 12px; }
+    .navbar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
     .navbar a {
       background-color: white; color: black; text-decoration: none;
-      font-size: 20px; padding: 12px 20px; border-radius: 6px;
+      font-size: 16px; padding: 6px 12px; border-radius: 5px;
       display: flex; align-items: center;
     }
-    .navbar a img { height: 28px; margin-right: 8px; }
+    .navbar a img { height: 24px; margin-right: 6px; }
     .sound-toggle {
-      background-color: white; font-size: 22px; border: none;
-      cursor: pointer; padding: 10px 18px; border-radius: 6px;
+      background-color: white; font-size: 18px; border: none;
+      cursor: pointer; padding: 6px 12px; border-radius: 5px;
     }
     #intro {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999;
@@ -67,15 +67,15 @@
     .nav-buttons {
       text-align: center; position: fixed; bottom: 50px; width: 100%; background: rgba(255,255,255,0.95);
       z-index: 999; padding: 10px 0; display: flex; justify-content: center; align-items: center;
-      gap: 15px; flex-wrap: nowrap; overflow-x: auto;
+      gap: 10px; flex-wrap: nowrap; overflow-x: auto;
     }
     .nav-buttons button {
-      font-size: 16px; padding: 8px 14px; background-color: #333; color: white; border: none;
+      font-size: 14px; padding: 6px 10px; background-color: #333; color: white; border: none;
       border-radius: 20px; cursor: pointer; transition: background 0.3s; white-space: nowrap;
     }
     .nav-buttons button:hover { background-color: #555; }
     .page-slider {
-      width: 200px;
+      width: 150px;
     }
   </style>
 </head>
@@ -124,8 +124,6 @@ let resizeTimeout;
 let lastPage = 1;
 let orientationReloaded = false;
 
-let isReload = true;  // 페이지 새로고침 여부를 확인하는 플래그
-
 function buildPages() {
   pages.length = 0;
   for (let i = 1; i <= totalPages; i++) {
@@ -166,7 +164,7 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
   waitForImages(() => {
     try {
       flipbook.turn({
-        duration: disableAnimation ? 0 : 1200, // 새로 고침 시 애니메이션 비활성화
+        duration: disableAnimation ? 0 : 1200,
         width: displayMode === 'single' ? width : width * 2,
         height: height,
         display: displayMode,
@@ -174,7 +172,6 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
         gradients: true,
         elevation: 50,
         acceleration: true,
-        dragAndDrop: false // 모바일 드래그 이동 비활성화
       }).turn("page", startPage);
       updateButtons();
     } catch (e) {
@@ -186,7 +183,7 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
     if ($("#loading").is(":visible")) {
       $("#loading").hide();
     }
-  }, 2000); // 로딩 시간을 줄였습니다.
+  }, 8000);
 }
 
 function updateButtons() {
@@ -221,8 +218,7 @@ function startCatalog() {
   lastPage = saved ? parseInt(saved) : 1;
   document.getElementById("intro").style.display = "none";
   buildPages();
-  initializeFlipbook(lastPage, isReload); // 새로 고침 시 애니메이션 비활성화
-  isReload = false;  // 새로 고침 후 한 번만 애니메이션 비활성화
+  initializeFlipbook(lastPage);
 }
 
 $(document).ready(function () {
