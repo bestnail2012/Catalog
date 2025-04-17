@@ -28,20 +28,6 @@
       gap: 10px;
       align-items: center;
     }
-    .navbar a {
-      background-color: white;
-      color: black;
-      text-decoration: none;
-      font-size: 16px;
-      padding: 6px 12px;
-      border-radius: 5px;
-      display: flex;
-      align-items: center;
-    }
-    .navbar a img {
-      height: 24px;
-      margin-right: 8px;
-    }
     .sound-toggle {
       background-color: white;
       font-size: 18px;
@@ -139,7 +125,7 @@
 </head>
 <body>
 
-  <!-- 인트로 화면 (텍스트 중심) -->
+  <!-- 인트로 -->
   <div id="intro">
     <h1>B-EST</h1>
     <h2>CATALOG</h2>
@@ -151,17 +137,13 @@
     <div class="navbar-left">비에스트 카달로그</div>
     <div class="navbar-right">
       <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
-      <a href="https://www.bestnail.kr" target="_blank">
-        <img src="비에스트 로고(딱맞게).png" alt="로고">
-        쇼핑몰
-      </a>
     </div>
   </div>
 
   <!-- 플립북 -->
   <div id="flipbook"></div>
 
-  <!-- 페이지 네비게이션 -->
+  <!-- 네비게이션 버튼 -->
   <div class="nav-buttons">
     <button id="prev">⬅ 이전</button>
     <span class="page-number" id="page-number">1 / 83</span>
@@ -279,17 +261,16 @@
         playFlipSound();
       });
 
+      // 🔧 개선된 클릭 이벤트 (비율 기반 계산)
       document.addEventListener("click", function (e) {
         const flipbook = document.getElementById("flipbook");
         if (!flipbook.contains(e.target)) return;
-
         if ($("#flipbook").turn("animating")) return;
 
         const rect = flipbook.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const mid = rect.width / 2;
+        const relativeX = (e.clientX - rect.left) / rect.width;
 
-        if (x > mid) {
+        if (relativeX > 0.5) {
           $("#flipbook").turn("next");
         } else {
           $("#flipbook").turn("previous");
