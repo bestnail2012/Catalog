@@ -9,50 +9,121 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
 
   <style>
-    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+    }
 
     .navbar {
-      display: flex; justify-content: space-between; align-items: center;
-      background-color: #333; color: white; padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: white;
+      padding: 16px 30px;
+      font-size: 20px;
     }
 
-    .navbar-left { display: flex; align-items: center; gap: 12px; }
-    .navbar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: bold;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+    }
 
     .navbar a {
-      background-color: white; color: black; text-decoration: none;
-      font-size: 16px; padding: 6px 12px; border-radius: 5px;
-      display: flex; align-items: center;
+      background-color: white;
+      color: black;
+      text-decoration: none;
+      font-size: 18px;
+      padding: 10px 16px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
     }
 
-    .navbar a img { height: 24px; margin-right: 6px; }
+    .navbar a img {
+      height: 24px;
+      margin-right: 6px;
+    }
 
     .sound-toggle {
-      background-color: white; font-size: 18px; border: none;
-      cursor: pointer; padding: 6px 12px; border-radius: 5px;
+      background-color: white;
+      font-size: 20px;
+      border: none;
+      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: 5px;
     }
 
     #intro {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    #intro h1 { font-size: 64px; margin: 0; font-weight: bold; }
-    #intro h2 { font-size: 40px; margin: 10px 0 30px 0; }
+    #intro h1 {
+      font-size: 64px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    #intro h2 {
+      font-size: 40px;
+      margin: 10px 0 30px 0;
+    }
 
     #intro button {
-      padding: 12px 24px; font-size: 18px; background-color: #333; color: white;
-      border: none; border-radius: 8px; cursor: pointer;
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
 
     #loading {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.8); z-index: 9998;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+      z-index: 9998;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    #loading img { width: 60px; height: auto; }
-    #loading span { margin-top: 10px; font-size: 18px; color: #333; }
+    #loading img {
+      width: 60px;
+      height: auto;
+    }
+
+    #loading span {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #333;
+    }
 
     #flipbook {
       margin: 20px auto;
@@ -61,37 +132,68 @@
     }
 
     .page {
-      display: flex; justify-content: center; align-items: center; background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
       position: relative;
     }
 
     .page img {
-      max-width: 100%; max-height: 100%; object-fit: contain; display: block; margin: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      margin: auto;
     }
 
     .page-number-display {
-      position: absolute; bottom: 10px; width: 100%; text-align: center;
-      font-size: 16px; font-weight: bold; color: #555;
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #555;
     }
 
     @media (max-width: 600px) and (orientation: portrait) {
       .page-number-display {
-        font-size: 9px;
+        font-size: 9px !important;
       }
     }
 
     .nav-buttons {
-      text-align: center; position: fixed; bottom: 50px; width: 100%; background: rgba(255,255,255,0.95);
-      z-index: 999; padding: 10px 0; display: flex; justify-content: center; align-items: center;
-      gap: 10px; flex-wrap: nowrap; overflow-x: auto;
+      text-align: center;
+      position: fixed;
+      bottom: 50px;
+      width: 100%;
+      background: rgba(255,255,255,0.95);
+      z-index: 999;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
     }
 
     .nav-buttons button {
-      font-size: 14px; padding: 6px 10px; background-color: #333; color: white; border: none;
-      border-radius: 20px; cursor: pointer; transition: background 0.3s; white-space: nowrap;
+      font-size: 16px;
+      padding: 10px 16px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+      white-space: nowrap;
     }
 
-    .nav-buttons button:hover { background-color: #555; }
+    .nav-buttons button:hover {
+      background-color: #555;
+    }
 
     .page-slider {
       width: 150px;
@@ -102,7 +204,7 @@
 
 <div id="intro">
   <h1>B-EST</h1>
-  <h2>CATALOG</h2>
+  <h2><b>CATALOG</b></h2>
   <button onclick="startCatalog()">펼쳐보기</button>
 </div>
 
@@ -112,9 +214,7 @@
 </div>
 
 <div class="navbar">
-  <div class="navbar-left">
-    <span>B-EST CATALOG</span>
-  </div>
+  <div class="navbar-left"><b>B-EST CATALOG</b></div>
   <div class="navbar-right">
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
     <a href="https://www.bestnail.kr" target="_blank">
@@ -147,12 +247,7 @@ function buildPages() {
   pages.length = 0;
   for (let i = 1; i <= totalPages; i++) {
     const num = String(i).padStart(2, '0');
-    pages.push(`
-      <div class='page'>
-        <img src='${num}.jpg' loading='lazy' />
-        <div class='page-number-display'>-${i}-</div>
-      </div>
-    `);
+    pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /><div class='page-number-display'>-${i}-</div></div>`);
   }
 }
 
@@ -180,6 +275,7 @@ function getDisplayMode() {
 
 function initializeFlipbook(startPage = 1, disableAnimation = false) {
   $("#loading").show();
+
   const flipbook = $("#flipbook");
   if (flipbook.data("turn")) flipbook.turn("destroy").html("");
 
@@ -203,34 +299,19 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
         gradients: true,
         elevation: 50,
         acceleration: true,
+        corners: (screenWidth <= 600) ? '' : 'all' // 모바일에서는 모서리 넘김 제거
       }).turn("page", startPage);
       updateButtons();
     } catch (e) {
       console.error("Flipbook 초기화 오류", e);
     }
+
     $("#loading").hide();
   });
 
   setTimeout(() => {
     $("#loading").hide();
   }, 5000);
-
-  // click 이벤트도 여기서 안전하게 바인딩
-  $("#flipbook").off("click").on("click", function (e) {
-    const rect = this.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    if (x > rect.width / 2) {
-      flipbook.turn("next");
-    } else {
-      flipbook.turn("previous");
-    }
-    playFlipSound();
-  });
-
-  $("#flipbook").off("turned").on("turned", () => {
-    updateButtons();
-    playFlipSound();
-  });
 }
 
 function updateButtons() {
@@ -261,8 +342,8 @@ function toggleSound() {
 }
 
 function startCatalog() {
-  const saved = parseInt(localStorage.getItem('lastPage'));
-  lastPage = isNaN(saved) ? 1 : saved;
+  const saved = localStorage.getItem('lastPage');
+  lastPage = saved ? parseInt(saved) : 1;
   document.getElementById("intro").style.display = "none";
   buildPages();
   initializeFlipbook(lastPage);
@@ -282,25 +363,46 @@ $(document).ready(function () {
     }
   });
 
-  $(window).on("resize orientationchange", () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      const newMode = getDisplayMode();
-      if (newMode !== currentDisplayMode) {
-        lastPage = $("#flipbook").turn("page");
-        $("#flipbook").turn("destroy");
-        initializeFlipbook(lastPage, true);
-      }
-    }, 300);
+  $("#flipbook").on("click", function (e) {
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x > rect.width / 2) {
+      $("#flipbook").turn("next");
+    } else {
+      $("#flipbook").turn("previous");
+    }
+    playFlipSound();
   });
 
-  const savedPage = parseInt(localStorage.getItem('lastPage'));
-  if (!isNaN(savedPage)) {
+  $(window).on("resize orientationchange", () => {
+    if (window.innerWidth <= 600) {
+      location.reload(); // 모바일에서 새로고침
+    } else {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const newMode = getDisplayMode();
+        if (newMode !== currentDisplayMode) {
+          lastPage = $("#flipbook").turn("page");
+          $("#flipbook").turn("destroy");
+          initializeFlipbook(lastPage, true);
+        }
+      }, 300);
+    }
+  });
+
+  $("#flipbook").on("turned", () => {
+    updateButtons();
+    playFlipSound();
+  });
+
+  const savedPage = localStorage.getItem('lastPage');
+  if (savedPage) {
     startCatalog();
   } else {
     document.getElementById("intro").style.display = "flex";
   }
 });
 </script>
+
 </body>
 </html>
