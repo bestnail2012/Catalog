@@ -158,6 +158,10 @@ function buildPages(limit = totalPages) {
   }
 }.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
   }
+}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
+  }
+}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
+  }
 }
 
 function getDisplayMode() {
@@ -194,7 +198,6 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
   waitForImages(() => {
     flipbook.turn({
       duration: disableAnimation ? 0 : 1200,
-      duration: disableAnimation ? 0 : 1200,
       width: displayMode === 'single' ? width : width * 2,
       height: height,
       display: displayMode,
@@ -216,9 +219,14 @@ function updateButtons() {
   // 다음 페이지가 없을 경우 추가 생성 (최대 totalPages까지)
   if (loadedPages < totalPages && current + 2 > loadedPages) {
     for (let i = loadedPages + 1; i <= Math.min(totalPages, loadedPages + 6); i++) {
-  if (!pages[i - 1]) {
-    const num = String(i).padStart(2, '0');
-    pages[i - 1] = `<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
+    if (!pages[i - 1]) {
+      const num = String(i).padStart(2, '0');
+      pages[i - 1] = `<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
+    }
+    if (!$("#flipbook").turn("hasPage", i)) {
+      $("#flipbook").turn("addPage", $(pages[i - 1]), i);
+    }
+  }.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
   }
   if (!$("#flipbook").turn("hasPage", i)) {
     $("#flipbook").turn("addPage", $(pages[i - 1]), i);
