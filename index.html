@@ -191,7 +191,7 @@
 
   $(document).ready(function () {
     $(document).on("click", "#first", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
-    $(document).on("click", "#last", () => { const total = $("#flipbook").turn("pages"); $("#flipbook").turn("page", total); playFlipSound(); });
+    $(document).on("click", "#last", () => { const total = totalPages; $("#flipbook").turn("page", total); playFlipSound(); });
     $(document).on("click", "#prev", () => { $("#flipbook").turn("previous"); playFlipSound(); });
     $(document).on("click", "#next", () => { $("#flipbook").turn("next"); playFlipSound(); });
 
@@ -217,12 +217,18 @@
     });
 
     let prevRatio = window.devicePixelRatio;
-    setInterval(() => {
-      if (window.devicePixelRatio !== prevRatio) {
-        prevRatio = window.devicePixelRatio;
-        initializeFlipbook();
-      }
-    }, 500);
+function checkZoomChange() {
+  if (window.devicePixelRatio !== prevRatio) {
+    prevRatio = window.devicePixelRatio;
+    initializeFlipbook();
+  }
+}
+window.addEventListener("resize", () => {
+  clearTimeout(window._resizeTimeout);
+  window._resizeTimeout = setTimeout(() => {
+    checkZoomChange();
+  }, 300);
+});
 
     $("#flipbook").on("turned", () => {
       updateButtons();
