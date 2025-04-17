@@ -74,7 +74,13 @@
     if (savedPage) {
       window.lastSavedPage = parseInt(savedPage);
     }
-  </script>
+    window.addEventListener('load', () => {
+  const saved = localStorage.getItem('lastPage');
+  if (saved) {
+    startCatalog(true);
+  }
+});
+</script>
 </head>
 <body>
 
@@ -226,12 +232,12 @@ function toggleSound() {
   }
 }
 
-function startCatalog() {
+function startCatalog(isAuto = false) {
   const saved = localStorage.getItem('lastPage');
   lastPage = saved ? parseInt(saved) : 1;
   document.getElementById("intro").style.display = "none";
   buildPages();
-  initializeFlipbook(lastPage, !!saved);
+  initializeFlipbook(lastPage, isAuto);
 }
 
 $(document).ready(function () {
