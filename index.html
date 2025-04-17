@@ -78,21 +78,23 @@
   const saved = localStorage.getItem('lastPage');
   if (saved) {
     startCatalog(true);
+  } else {
+    document.getElementById("intro").style.display = "flex";
   }
 });
 </script>
 </head>
 <body>
 
-<div id="intro">
+<div id="intro" style="display: none;">
   <h1>B-EST</h1>
   <h2>CATALOG</h2>
   <button onclick="startCatalog()">펼쳐보기</button>
 </div>
 
 <div id="loading">
-  <img src="비에스트 로고(딱맞게).png" alt="로딩 중..." />
-  <span>로딩 중...</span>
+  <img src="비에스트 로고(딱맞게).png" alt="로딩 중" />
+  <span>로딩 중</span>
 </div>
 
 <div class="navbar">
