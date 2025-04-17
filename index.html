@@ -150,6 +150,7 @@
   }
 
   function initializeFlipbook() {
+    buildPages();
     const maxWidth = 1000;
     const screenWidth = window.innerWidth;
     const width = Math.min(screenWidth * 0.95, maxWidth);
@@ -161,7 +162,6 @@
       flipbook.turn("destroy");
     }
 
-    buildPages();
     flipbook.html(pages.join("\n"));
 
     flipbook.turn({
@@ -191,14 +191,13 @@
 
   $(document).ready(function () {
     $(document).on("click", "#first", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
-    $(document).on("click", "#last", () => { const total = totalPages; $("#flipbook").turn("page", total); playFlipSound(); });
+    $(document).on("click", "#last", () => { $("#flipbook").turn("page", totalPages); playFlipSound(); });
     $(document).on("click", "#prev", () => { $("#flipbook").turn("previous"); playFlipSound(); });
     $(document).on("click", "#next", () => { $("#flipbook").turn("next"); playFlipSound(); });
 
     $(document).on("keydown", "#pageInput", function(e) {
       if (e.key === "Enter") {
         const input = parseInt($(this).val(), 10);
-        const total = $("#flipbook").turn("pages");
         if (!isNaN(input) && input >= 1 && input <= totalPages) {
           $("#flipbook").turn("page", input);
           playFlipSound();
@@ -209,26 +208,18 @@
     });
 
     let lastWidth = window.innerWidth;
-    $(window).on("resize orientationchange", () => {
-      if (Math.abs(window.innerWidth - lastWidth) > 50) {
-        lastWidth = window.innerWidth;
-        initializeFlipbook();
-      }
-    });
-
     let prevRatio = window.devicePixelRatio;
-function checkZoomChange() {
-  if (window.devicePixelRatio !== prevRatio) {
-    prevRatio = window.devicePixelRatio;
-    initializeFlipbook();
-  }
-}
-window.addEventListener("resize", () => {
-  clearTimeout(window._resizeTimeout);
-  window._resizeTimeout = setTimeout(() => {
-    checkZoomChange();
-  }, 300);
-});
+
+    function handleResizeOrZoom() {
+      const newRatio = window.devicePixelRatio;
+      if (Math.abs(window.innerWidth - lastWidth) > 50 || newRatio !== prevRatio) {
+        lastWidth = window.innerWidth;
+        prevRatio = newRatio;
+        setTimeout(() => initializeFlipbook(), 100);
+      }
+    }
+
+    $(window).on("resize orientationchange", handleResizeOrZoom);
 
     $("#flipbook").on("turned", () => {
       updateButtons();
