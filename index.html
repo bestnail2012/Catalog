@@ -87,17 +87,10 @@
   <button onclick="startCatalog()">펼쳐보기</button>
 </div>
 
-// 로딩 텍스트 애니메이션 (0.5초마다 변경)
-const loadingTexts = ["로딩 중", "로딩 중.", "로딩 중..", "로딩 중...", "로딩 중"];
-let loadingIndex = 0;
-setInterval(() => {
-  const span = document.querySelector("#loading span");
-  if (span) {
-    span.textContent = loadingTexts[loadingIndex];
-    loadingIndex = (loadingIndex + 1) % loadingTexts.length;
-  }
-}, 500);
-
+<div id="loading">
+  <img src="비에스트 로고(딱맞게).png" alt="로딩 중..." />
+  <span>로딩 중...</span>
+</div>
 
 <div class="navbar">
   <div class="navbar-left">
