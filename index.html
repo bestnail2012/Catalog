@@ -21,7 +21,7 @@
     }
 
     .navbar-left span {
-      font-size: 20px; font-weight: bold;
+      font-size: 20px;
     }
 
     .navbar-right {
@@ -31,7 +31,7 @@
     .navbar a {
       background-color: white; color: black; text-decoration: none;
       font-size: 16px; padding: 6px 12px; border-radius: 5px;
-      display: flex; align-items: center; height: 36px;
+      display: flex; align-items: center;
     }
 
     .navbar a img { height: 24px; margin-right: 6px; }
@@ -39,7 +39,6 @@
     .sound-toggle {
       background-color: white; font-size: 18px; border: none;
       cursor: pointer; padding: 6px 12px; border-radius: 5px;
-      height: 36px;
     }
 
     #intro {
@@ -65,11 +64,14 @@
     #loading span { margin-top: 10px; font-size: 18px; color: #333; }
 
     #flipbook {
-      margin: 20px auto; box-shadow: 0 0 10px rgba(0,0,0,0.2); touch-action: manipulation;
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      touch-action: manipulation;
     }
 
     .page {
-      display: flex; justify-content: center; align-items: center; background: white; position: relative;
+      display: flex; justify-content: center; align-items: center; background: white;
+      position: relative;
     }
 
     .page img {
@@ -84,29 +86,28 @@
     @media (max-width: 600px) {
       .page-number-display { font-size: 9px !important; }
 
-      .navbar-left { justify-content: flex-start; }
+      .navbar-left {
+        justify-content: flex-start;
+      }
+
       .navbar-left span {
         font-size: 13px !important;
         margin-left: -10px !important;
+        font-weight: bold;
       }
 
-      .navbar-right { justify-content: flex-end; }
+      .navbar-right {
+        justify-content: flex-end;
+      }
 
       .sound-toggle {
         font-size: 12px !important;
         padding: 2px 6px !important;
-        height: 28px !important;
       }
 
       .navbar a {
         font-size: 12px !important;
         padding: 2px 6px !important;
-        height: 28px !important;
-      }
-
-      .page {
-        justify-content: center;
-        align-items: center;
       }
     }
 
@@ -123,27 +124,21 @@
 
     .nav-buttons button:hover { background-color: #555; }
 
-    .page-slider { width: 150px; }
+    .page-slider {
+      width: 150px;
+    }
   </style>
 
   <script>
-    let previousOrientation = window.screen.orientation ? window.screen.orientation.type : window.orientation;
+    let previousOrientation = window.orientation;
     window.addEventListener("orientationchange", function () {
       setTimeout(() => {
-        const current = window.screen.orientation ? window.screen.orientation.type : window.orientation;
-        if (current !== previousOrientation) {
-          previousOrientation = current;
+        if (window.orientation !== previousOrientation) {
+          previousOrientation = window.orientation;
           localStorage.setItem("skipAnimation", "true");
           location.reload();
         }
       }, 300);
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const skip = localStorage.getItem("skipAnimation") === "true";
-      const turnOptions = { acceleration: true, display: 'double', gradients: !skip, autoCenter: true, duration: skip ? 0 : 600 };
-      $('#flipbook').turn(turnOptions);
-      localStorage.removeItem("skipAnimation");
     });
   </script>
 </head>
