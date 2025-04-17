@@ -1,88 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>B-EST CATALOG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
-
-  <style>
-    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
-    .navbar {
-      display: flex; justify-content: space-between; align-items: center;
-      background-color: #333; color: white; padding: 10px 20px;
-    }
-    .navbar-left { display: flex; align-items: center; gap: 12px; }
-    .navbar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
-    .navbar a {
-      background-color: white; color: black; text-decoration: none;
-      font-size: 16px; padding: 6px 12px; border-radius: 5px;
-      display: flex; align-items: center;
-    }
-    .navbar a img { height: 24px; margin-right: 6px; }
-    .sound-toggle {
-      background-color: white; font-size: 18px; border: none;
-      cursor: pointer; padding: 6px 12px; border-radius: 5px;
-    }
-    #intro {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-    }
-    #intro h1 { font-size: 64px; margin: 0; font-weight: bold; }
-    #intro h2 { font-size: 40px; margin: 10px 0 30px 0; }
-    #intro button {
-      padding: 12px 24px; font-size: 18px; background-color: #333; color: white;
-      border: none; border-radius: 8px; cursor: pointer;
-    }
-    #loading {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.8); z-index: 9998;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-    }
-    #loading img { width: 60px; height: auto; }
-    #loading span { margin-top: 10px; font-size: 18px; color: #333; }
-    #flipbook {
-      margin: 20px auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      touch-action: manipulation;
-    }
-    .page {
-      display: flex; justify-content: center; align-items: center; background: white;
-    }
-    .page img {
-      max-width: 100%; max-height: 100%; object-fit: contain; display: block; margin: auto;
-    }
-    .nav-buttons {
-      text-align: center; position: fixed; bottom: 50px; width: 100%; background: rgba(255,255,255,0.95);
-      z-index: 999; padding: 10px 0; display: flex; justify-content: center; align-items: center;
-      gap: 4px; flex-wrap: nowrap; overflow-x: auto;
-    }
-    .nav-buttons button {
-      font-size: 18px; padding: 6px 10px; background-color: #333; color: white; border: none;
-      border-radius: 20px; cursor: pointer; transition: background 0.3s; white-space: nowrap;
-    }
-    .nav-buttons button:hover { background-color: #555; }
-    .page-number { font-size: 16px; color: #555; white-space: nowrap; }
-    .page-input {
-      width: 40px; padding: 4px; font-size: 13px; border-radius: 5px; border: 1px solid #ccc;
-    }
-  </style>
-  <script>
-    const savedPage = localStorage.getItem('lastPage');
-    if (savedPage) {
-      window.lastSavedPage = parseInt(savedPage);
-    }
-    window.addEventListener('load', () => {
-  const saved = localStorage.getItem('lastPage');
-  if (saved) {
-    startCatalog(true);
-  } else {
-    document.getElementById("intro").style.display = "flex";
-  }
-});
-</script>
 </head>
 <body>
 
@@ -92,8 +15,8 @@
   <button onclick="startCatalog()">펼쳐보기</button>
 </div>
 
-<div id="loading">
-  <img src="비에스트 로고(딱맞게).png" alt="로딩 중..." />
+<div id="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9998; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+  <img src="비에스트 로고(딱맞게).png" alt="로딩 중..." style="width: 60px; height: auto;">
   <span>로딩 중...</span>
 </div>
 
@@ -108,24 +31,6 @@
     </a>
   </div>
 </div>
-
-<script>
-  let reloadTimeout;
-  function setReloadFallback() {
-    clearTimeout(reloadTimeout);
-    reloadTimeout = setTimeout(() => {
-      if (document.getElementById("loading").style.display !== "none") {
-        localStorage.setItem('lastPage', lastPage || 1);
-        location.reload();
-      }
-    }, 5000);
-  }
-  setReloadFallback();
-  window.addEventListener('orientationchange', () => {
-    localStorage.setItem('lastPage', lastPage || 1);
-    location.reload();
-  });
-</script>
 
 <div id="flipbook"></div>
 
@@ -146,7 +51,6 @@ const pages = [];
 let soundLevel = 0.5;
 let resizeTimeout;
 let lastPage = 1;
-let orientationReloaded = false;
 
 function buildPages(limit = totalPages) {
   pages.length = 0;
@@ -154,23 +58,6 @@ function buildPages(limit = totalPages) {
     const num = String(i).padStart(2, '0');
     pages.push(`<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
   }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
-  }
-}
-
-function getDisplayMode() {
-  const isPortrait = window.innerHeight > window.innerWidth;
-  return isPortrait ? 'single' : 'double';
 }
 
 function waitForImages(callback) {
@@ -186,6 +73,11 @@ function waitForImages(callback) {
       });
     }
   });
+}
+
+function getDisplayMode() {
+  const isPortrait = window.innerHeight > window.innerWidth;
+  return isPortrait ? 'single' : 'double';
 }
 
 function initializeFlipbook(startPage = 1, disableAnimation = false) {
@@ -206,7 +98,6 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
       height: height,
       display: displayMode,
       autoCenter: true,
-      // duration은 disableAnimation 조건에 따라 위에서 설정됨
       gradients: true,
       elevation: 50,
       acceleration: true,
@@ -214,49 +105,35 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
     updateButtons();
     $("#loading").hide();
   });
+
+  setTimeout(() => {
+    if (document.getElementById("loading").style.display !== "none") {
+      localStorage.setItem('lastPage', lastPage || 1);
+      location.reload();
+    }
+  }, 5000);
 }
 
 function updateButtons() {
   const loadedPages = pages.length;
   const current = $("#flipbook").turn("page");
-
-  // 다음 페이지가 없을 경우 추가 생성 (최대 totalPages까지)
   if (loadedPages < totalPages && current + 2 > loadedPages) {
     for (let i = loadedPages + 1; i <= Math.min(totalPages, loadedPages + 6); i++) {
-  if (!pages[i - 1]) {
-    const num = String(i).padStart(2, '0');
-    pages[i - 1] = `<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
-  }
-  if (!$("#flipbook").turn("hasPage", i)) {
-    $("#flipbook").turn("addPage", $(pages[i - 1]), i);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
-    }
-    if (!$("#flipbook").turn("hasPage", i)) {
-      $("#flipbook").turn("addPage", $(pages[i - 1]), i);
-    }
-  }.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
-  }
-  if (!$("#flipbook").turn("hasPage", i)) {
-    $("#flipbook").turn("addPage", $(pages[i - 1]), i);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
-  }
-  if (!$("#flipbook").turn("hasPage", i)) {
-    $("#flipbook").turn("addPage", $(pages[i - 1]), i);
-  }
-}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
-      $("#flipbook").turn("addPage", $(pages[i - 1]), i);
+      if (!pages[i - 1]) {
+        const num = String(i).padStart(2, '0');
+        pages[i - 1] = `<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`;
+      }
+      if (!$("#flipbook").turn("hasPage", i)) {
+        $("#flipbook").turn("addPage", $(pages[i - 1]), i);
+      }
     }
   }
-  const current = $("#flipbook").turn("page");
   const view = $("#flipbook").turn("view");
   const text = view.length > 1 ? `${Math.min(...view)}-${Math.max(...view)} / ${totalPages}` : `${current} / ${totalPages}`;
   $("#page-number").text(text);
   $("#prev").toggle(current > 1);
   $("#next").toggle(current < totalPages);
   lastPage = current;
-  localStorage.setItem('lastPage', lastPage);
 }
 
 function playFlipSound() {
@@ -283,17 +160,17 @@ function startCatalog(isAuto = false) {
   const saved = localStorage.getItem('lastPage');
   lastPage = saved ? parseInt(saved) : 1;
   document.getElementById("intro").style.display = "none";
-  buildPages(6);
+  buildPages();
   initializeFlipbook(lastPage, isAuto);
 }
 
 $(document).ready(function () {
-  $(document).on("click", "#first", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
-  $(document).on("click", "#last", () => { $("#flipbook").turn("page", totalPages); playFlipSound(); });
-  $(document).on("click", "#prev", () => { $("#flipbook").turn("previous"); playFlipSound(); });
-  $(document).on("click", "#next", () => { $("#flipbook").turn("next"); playFlipSound(); });
+  $("#first").click(() => { $("#flipbook").turn("page", 1); playFlipSound(); });
+  $("#last").click(() => { $("#flipbook").turn("page", totalPages); playFlipSound(); });
+  $("#prev").click(() => { $("#flipbook").turn("previous"); playFlipSound(); });
+  $("#next").click(() => { $("#flipbook").turn("next"); playFlipSound(); });
 
-  $(document).on("keydown", "#pageInput", function(e) {
+  $("#pageInput").on("keydown", function(e) {
     if (e.key === "Enter") {
       const val = parseInt($(this).val(), 10);
       if (!isNaN(val) && val >= 1 && val <= totalPages) {
@@ -308,27 +185,12 @@ $(document).ready(function () {
   $(window).on("resize orientationchange", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      localStorage.setItem('lastPage', lastPage);
       location.reload();
     }, 200);
   });
 
   $("#flipbook").on("turned", () => {
     updateButtons();
-    playFlipSound();
-  });
-
-  document.addEventListener("click", function (e) {
-    const flipbook = document.getElementById("flipbook");
-    if (!flipbook.contains(e.target)) return;
-    if ($("#flipbook").turn("animating")) return;
-    const rect = flipbook.getBoundingClientRect();
-    const xRatio = (e.clientX - rect.left) / rect.width;
-    if (xRatio > 0.5) {
-      $("#flipbook").turn("next");
-    } else {
-      $("#flipbook").turn("previous");
-    }
     playFlipSound();
   });
 
@@ -350,6 +212,13 @@ $(document).ready(function () {
       xDown = null;
     }
   }, false);
+
+  const savedPage = localStorage.getItem('lastPage');
+  if (savedPage) {
+    startCatalog(true);
+  } else {
+    document.getElementById("intro").style.display = "flex";
+  }
 });
 </script>
 </body>
