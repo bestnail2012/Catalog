@@ -4,7 +4,29 @@
   <meta charset="utf-8">
   <title>비에스트 카달로그</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js">function waitForImages(callback) {
+  const imgs = $("#flipbook img");
+  let loaded = 0;
+  const total = imgs.length;
+  if (total === 0) return callback();
+
+  imgs.each(function () {
+    if (this.complete) {
+      loaded++;
+      if (loaded === total) callback();
+    } else {
+      $(this).on("load", function () {
+        loaded++;
+        if (loaded === total) callback();
+      }).on("error", function () {
+        loaded++;
+        if (loaded === total) callback();
+      });
+    }
+  });
+}
+
+</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
     body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
@@ -170,21 +192,27 @@
 
     flipbook.html(pages.join("\n"));
 
-    flipbook.turn({
-      width: displayMode === 'single' ? width : width * 2,
-      height: height,
-      autoCenter: true,
-      display: displayMode,
-      gradients: true,
-      duration: 1200,
-      elevation: 50,
-      acceleration: true,
-      turnCorners: "",
-      when: {
-        turning: function(e, page, view) {
-          e.stopPropagation();
+    waitForImages(() => {
+      flipbook.turn({
+        width: displayMode === 'single' ? width : width * 2,
+        height: height,
+        autoCenter: true,
+        display: displayMode,
+        gradients: true,
+        duration: 1200,
+        elevation: 50,
+        acceleration: true,
+        turnCorners: "",
+        when: {
+          turning: function(e, page, view) {
+            e.stopPropagation();
+          }
         }
-      }
+      });
+      updateButtons();
+      // 페이지를 다시 설정하여 displayMode 변경 시 오류 방지
+      const currentPage = flipbook.turn("page") || 1;
+      flipbook.turn("page", currentPage);
     });
 
     updateButtons();
