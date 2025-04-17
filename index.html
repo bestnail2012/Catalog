@@ -93,8 +93,8 @@
 </div>
 
 <div id="loading">
-  <img src="비에스트 로고(딱맞게).png" alt="로딩 중" />
-  <span>로딩 중</span>
+  <img src="비에스트 로고(딱맞게).png" alt="로딩 중..." />
+  <span>로딩 중...</span>
 </div>
 
 <div class="navbar">
@@ -148,10 +148,13 @@ let resizeTimeout;
 let lastPage = 1;
 let orientationReloaded = false;
 
-function buildPages() {
-  for (let i = 1; i <= totalPages; i++) {
+function buildPages(limit = totalPages) {
+  pages.length = 0;
+  for (let i = 1; i <= limit; i++) {
     const num = String(i).padStart(2, '0');
     pages.push(`<div class='page'><div style='position:relative; width:100%; height:100%;'><img src='${num}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
+  }
+}.jpg' loading='lazy' style='width:100%; height:100%; object-fit:contain;'/><div style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:24px; font-weight:bold; color:#444;'>-${i}-</div></div></div>`);
   }
 }
 
@@ -239,7 +242,7 @@ function startCatalog(isAuto = false) {
   const saved = localStorage.getItem('lastPage');
   lastPage = saved ? parseInt(saved) : 1;
   document.getElementById("intro").style.display = "none";
-  buildPages();
+  buildPages(6);
   initializeFlipbook(lastPage, isAuto);
 }
 
