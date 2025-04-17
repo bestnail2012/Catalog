@@ -4,7 +4,48 @@
   <meta charset="utf-8">
   <title>비에스트 카달로그</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js">  let touchX = 0, touchY = 0;
+  document.addEventListener("touchmove", (e) => {
+    if (window.innerWidth > 768) return;
+    const touch = e.touches[0];
+    touchX = touch.pageX;
+    touchY = touch.pageY;
+  });
+
+  function animateZoomLens() {
+    if (window.innerWidth > 768) return;
+    const target = document.elementFromPoint(touchX - window.scrollX, touchY - window.scrollY);
+    if (target && target.tagName === "IMG" && target.closest(".page")) {
+      const rect = target.getBoundingClientRect();
+      if (!zoomLens.classList.contains('visible')) zoomLens.classList.add('visible');
+      zoomLens.style.left = touchX - 250 + "px";
+      zoomLens.style.top = touchY - 250 + "px";
+      zoomImg.src = target.src;
+      zoomImg.style.left = -((touchX - rect.left) * zoomScale - 250) + "px";
+      zoomImg.style.top = -((touchY - rect.top) * zoomScale - 250) + "px";
+    } else {
+      zoomLens.classList.remove('visible');
+    }
+    requestAnimationFrame(animateZoomLens);
+  }
+  animateZoomLens();
+  document.addEventListener("click", function (e) {
+    if (window.innerWidth <= 768 || window.innerWidth < window.innerHeight) return; // only landscape mobile
+    const target = e.target;
+    if (target.tagName === "IMG" && target.closest(".page")) {
+      const zoomOverlay = document.getElementById("zoomOverlay");
+      const zoomOverlayImg = document.getElementById("zoomOverlayImg");
+      zoomOverlayImg.src = target.src;
+      zoomOverlay.style.display = "flex";
+    }
+  });
+  document.addEventListener("click", function (e) {
+    const overlay = document.getElementById("zoomOverlay");
+    if (overlay.style.display === "flex" && !e.target.closest("#zoomOverlayImg")) {
+      overlay.style.display = "none";
+    }
+  });
+</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
     body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
@@ -100,6 +141,8 @@
     }
   </style>
 <style>:root { --zoom-scale: 1.5; }</style>
+.zoom-lens.visible { display: block !important; }
+</style>
 </head>
 <body>
 
@@ -121,7 +164,9 @@
 </div>
 
 <div id="flipbook"></div>
-<div class="zoom-lens" id="zoomLens"><img id="zoomImg" src="" /></div>
+<div id="zoomOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); z-index:2000; justify-content:center; align-items:center;">
+  <img id="zoomOverlayImg" src="" style="max-width:90%; max-height:90%; object-fit:contain; box-shadow:0 0 20px #000; border-radius:8px;" />
+</div>
 
 <div class="nav-buttons">
   <button id="first">⏮</button>
@@ -308,29 +353,9 @@ let flipVolume = 1.0;
     });
 
     // 마우스 확대 기능 (PC에서만)
-    const zoomLens = document.getElementById("zoomLens");
-    const zoomImg = document.getElementById("zoomImg");
-    let zoomScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zoom-scale')) || 1.5;
+    
 
-    document.addEventListener("mousemove", function (e) {
-      zoomScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zoom-scale')) || 1.5;
-      if (window.innerWidth <= 768) return zoomLens.style.display = "none";
-      const target = e.target;
-      if (target.tagName === "IMG" && target.closest(".page")) {
-        const rect = target.getBoundingClientRect();
-        zoomLens.style.display = "block";
-        const lensSize = 300;
-        const offsetX = lensSize / 2;
-        const offsetY = lensSize / 2;
-        zoomLens.style.left = e.pageX - offsetX + "px";
-        zoomLens.style.top = e.pageY - offsetY + "px";
-        zoomImg.src = target.src;
-        zoomImg.style.left = -((e.clientX - rect.left) * zoomScale - 250) + "px";
-        zoomImg.style.top = -((e.clientY - rect.top) * zoomScale - 125) + "px";
-      } else {
-        zoomLens.style.display = "none";
-      }
-    });
+    
   });
 </script>
 
