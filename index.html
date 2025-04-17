@@ -5,11 +5,14 @@
   <title>B-EST CATALOG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js">
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+// 인트로로 이동 + 저장된 페이지 복원 버튼 지원
 function goToIntro() {
-  document.getElementById("intro").style.display = "flex";
-  document.getElementById("flipbook").innerHTML = "";
+  $("#intro").fadeIn(300);
+  $("#flipbook").html("");
   localStorage.removeItem("lastPage");
+  isInitialLoad = true;
 }
 
 // 로딩 텍스트 애니메이션 (0.5초마다 변경)
@@ -25,9 +28,7 @@ setInterval(() => {
 
 // B-EST CATALOG 클릭 시 인트로 복귀 처리
 $(document).on("click", "#catalogTitle", function () {
-  $("#intro").show();
-  $("#flipbook").html("");
-  localStorage.removeItem("lastPage");
+  goToIntro();
 });
 
 // PC에서도 새로고침 후 첫 페이지 넘김 시 소리 제거 보장
