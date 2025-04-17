@@ -190,12 +190,12 @@
   }
 
   $(document).ready(function () {
-    $("#first").on("click", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
-    $("#last").on("click", () => { const total = $("#flipbook").turn("pages"); $("#flipbook").turn("page", total); playFlipSound(); });
-    $("#prev").on("click", () => { $("#flipbook").turn("previous"); playFlipSound(); });
-    $("#next").on("click", () => { $("#flipbook").turn("next"); playFlipSound(); });
+    $(document).on("click", "#first", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
+    $(document).on("click", "#last", () => { const total = $("#flipbook").turn("pages"); $("#flipbook").turn("page", total); playFlipSound(); });
+    $(document).on("click", "#prev", () => { $("#flipbook").turn("previous"); playFlipSound(); });
+    $(document).on("click", "#next", () => { $("#flipbook").turn("next"); playFlipSound(); });
 
-    $("#pageInput").on("keypress", function(e) {
+    $(document).on("keypress", "#pageInput", function(e) {
       if (e.which === 13) {
         const input = parseInt($(this).val(), 10);
         const total = $("#flipbook").turn("pages");
