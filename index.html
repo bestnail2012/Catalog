@@ -318,14 +318,18 @@ let flipVolume = 1.0;
     let prevRatio = window.devicePixelRatio;
 
     function handleResizeOrZoom() {
-      const newRatio = window.devicePixelRatio;
-      if (Math.abs(window.innerWidth - lastWidth) > 50 || newRatio !== prevRatio) {
-        lastWidth = window.innerWidth;
-        prevRatio = newRatio;
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            initializeFlipbook();
-          });
+  const newRatio = window.devicePixelRatio;
+  if (Math.abs(window.innerWidth - lastWidth) > 50 || newRatio !== prevRatio) {
+    lastWidth = window.innerWidth;
+    prevRatio = newRatio;
+    const currentPage = $("#flipbook").turn("page") || 1;
+    initializeFlipbook();
+    $("#flipbook").turn("page", currentPage);
+  }
+}
+    }, 200);
+  }
+});
         }, 200);
       }
     }
