@@ -208,6 +208,14 @@
       }
     });
 
+    let prevRatio = window.devicePixelRatio;
+    setInterval(() => {
+      if (window.devicePixelRatio !== prevRatio) {
+        prevRatio = window.devicePixelRatio;
+        initializeFlipbook();
+      }
+    }, 500);
+
     $("#flipbook").on("turned", () => {
       updateButtons();
       playFlipSound();
