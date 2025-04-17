@@ -94,7 +94,7 @@
 
 <div class="navbar">
   <div class="navbar-left">
-    <span>B-EST CATALOG</span>
+    <span style="font-weight: bold;">B-EST CATALOG</span>
   </div>
   <div class="navbar-right">
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
@@ -123,6 +123,24 @@ let soundLevel = 0.5;
 let resizeTimeout;
 let lastPage = 1;
 let orientationReloaded = false;
+let loadingDotsInterval;
+let allowAnimation = true;
+
+// 로딩 텍스트 점 애니메이션
+function startLoadingAnimation() {
+  const loadingText = document.querySelector("#loading span");
+  const baseText = "로딩 중";
+  let dotCount = 0;
+
+  loadingDotsInterval = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;
+    loadingText.textContent = baseText + ".".repeat(dotCount);
+  }, 500);
+}
+
+function stopLoadingAnimation() {
+  clearInterval(loadingDotsInterval);
+}
 
 function buildPages() {
   pages.length = 0;
@@ -153,8 +171,9 @@ function waitForImages(callback) {
 function initializeFlipbook(startPage = 1, disableAnimation = false) {
   if (!disableAnimation) {
     $("#loading").show();
+    startLoadingAnimation(); // 로딩 중 애니메이션 시작
   } else {
-    $("#loading").hide(); // 리사이즈 시 로딩 숨김
+    $("#loading").hide();
   }
 
   const flipbook = $("#flipbook");
@@ -167,10 +186,11 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
   const displayMode = window.innerHeight > window.innerWidth ? 'single' : 'double';
 
   flipbook.html(pages.join(""));
+
   waitForImages(() => {
     try {
       flipbook.turn({
-        duration: disableAnimation ? 0 : 1200, // 애니메이션 제거 여부
+        duration: (disableAnimation || !allowAnimation) ? 0 : 1200,
         width: displayMode === 'single' ? width : width * 2,
         height: height,
         display: displayMode,
@@ -183,14 +203,15 @@ function initializeFlipbook(startPage = 1, disableAnimation = false) {
     } catch (e) {
       console.error("Flipbook 초기화 오류", e);
     }
-
     if (!disableAnimation) {
       $("#loading").hide();
+      stopLoadingAnimation(); // 로딩 애니메이션 종료
     }
   });
 
   setTimeout(() => {
     $("#loading").hide();
+    stopLoadingAnimation(); // 타임아웃 종료 시 로딩 애니메이션 종료
   }, 5000);
 }
 
@@ -202,6 +223,7 @@ function updateButtons() {
 }
 
 function playFlipSound() {
+  if (!allowAnimation) return;
   const audio = document.getElementById("flipSound");
   audio.volume = soundLevel;
   audio.currentTime = 0;
@@ -222,59 +244,15 @@ function toggleSound() {
 }
 
 function startCatalog() {
-  const saved = localStorage.getItem('lastPage');
-  lastPage = saved ? parseInt(saved) : 1;
-  document.getElementById("intro").style.display = "none";
-  buildPages();
-  initializeFlipbook(lastPage);
+  $("#intro").hide();
+  initializeFlipbook(parseInt(localStorage.getItem("lastPage") || 1));
 }
 
 $(document).ready(function () {
-  $("#first").click(() => { $("#flipbook").turn("page", 1); playFlipSound(); });
-  $("#last").click(() => { $("#flipbook").turn("page", totalPages); playFlipSound(); });
-  $("#prev").click(() => { $("#flipbook").turn("previous"); playFlipSound(); });
-  $("#next").click(() => { $("#flipbook").turn("next"); playFlipSound(); });
-
-  $("#pageSlider").on("input change", function () {
-    const val = parseInt(this.value);
-    if (!isNaN(val) && val >= 1 && val <= totalPages) {
-      $("#flipbook").turn("page", val);
-      playFlipSound();
-    }
-  });
-
-  $("#flipbook").on("click", function (e) {
-    const rect = this.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    if (x > rect.width / 2) {
-      $("#flipbook").turn("next");
-    } else {
-      $("#flipbook").turn("previous");
-    }
-    playFlipSound();
-  });
-
-  $(window).on("resize orientationchange", () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    lastPage = $("#flipbook").turn("page");
-    $("#flipbook").turn("destroy"); // 기존 플립북 제거
-    initializeFlipbook(lastPage, true); // 다시 초기화 (애니메이션 제거)
-  }, 300);
-});
-
-  $("#flipbook").on("turned", () => {
-    updateButtons();
-    playFlipSound();
-  });
-
-  const savedPage = localStorage.getItem('lastPage');
-  if (savedPage) {
-    startCatalog();
-  } else {
-    document.getElementById("intro").style.display = "flex";
-  }
+  startLoadingAnimation();
+  setTimeout(() => initializeFlipbook(1, false), 1000);
 });
 </script>
+
 </body>
 </html>
