@@ -56,19 +56,21 @@
       text-align: center; position: fixed; bottom: 50px; width: 100%;
       background: rgba(255,255,255,0.95); z-index: 999;
       padding: 10px 0; display: flex; justify-content: center;
-      align-items: center; gap: 10px; flex-wrap: wrap;
+      align-items: center; gap: 4px; flex-wrap: nowrap; overflow-x: auto;
     }
     .nav-buttons button {
-      font-size: 14px; padding: 8px 16px;
+      font-size: 14px; padding: 6px 10px;
       background-color: #333; color: white; border: none;
-      border-radius: 25px; cursor: pointer; transition: background 0.3s;
+      border-radius: 20px; cursor: pointer; transition: background 0.3s;
+      white-space: nowrap;
     }
     .nav-buttons button:hover { background-color: #555; }
     .page-number {
-      font-size: 14px; color: #555;
+      font-size: 13px; color: #555;
+      white-space: nowrap;
     }
     .page-input {
-      width: 60px; padding: 6px; font-size: 14px;
+      width: 40px; padding: 4px; font-size: 13px;
       border-radius: 5px; border: 1px solid #ccc;
     }
   </style>
@@ -78,7 +80,7 @@
 <div id="intro">
   <h1>B-EST</h1>
   <h2>CATALOG</h2>
-  <button onclick="startCatalog()">평차보기</button>
+  <button onclick="startCatalog()">펼쳐보기</button>
 </div>
 
 <div class="navbar">
@@ -87,7 +89,7 @@
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
     <a href="https://www.bestnail.kr" target="_blank">
       <img src="비에스트 로고(딱맞게).png" alt="로고">
-      상품머리
+      쇼핑몰
     </a>
   </div>
 </div>
@@ -98,8 +100,7 @@
   <button id="first">⏮</button>
   <button id="prev">⬅ 이전</button>
   <span class="page-number" id="page-number">1 / 83</span>
-  <input type="number" id="pageInput" min="1" max="83" class="page-input" />
-  <button id="goPage">이동</button>
+  <input type="number" id="pageInput" min="1" max="83" class="page-input" placeholder="페이지" />
   <button id="next">다음 ➡</button>
   <button id="last">⏭</button>
 </div>
@@ -111,9 +112,12 @@
   const pages = [];
   let soundEnabled = true;
 
-  for (let i = 1; i <= totalPages; i++) {
-    const num = String(i).padStart(2, '0');
-    pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
+  function buildPages() {
+    pages.length = 0;
+    for (let i = 1; i <= totalPages; i++) {
+      const num = String(i).padStart(2, '0');
+      pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
+    }
   }
 
   function getDisplayMode() {
@@ -154,9 +158,10 @@
 
     const flipbook = $("#flipbook");
     if (flipbook.data("turn")) {
-      flipbook.turn("destroy").html("");
+      flipbook.turn("destroy");
     }
 
+    buildPages();
     flipbook.html(pages.join("\n"));
 
     flipbook.turn({
@@ -187,18 +192,21 @@
   $(document).ready(function () {
     $("#first").on("click", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
     $("#last").on("click", () => { const total = $("#flipbook").turn("pages"); $("#flipbook").turn("page", total); playFlipSound(); });
-    $("#goPage").on("click", () => {
-      const input = parseInt(document.getElementById("pageInput").value, 10);
-      const total = $("#flipbook").turn("pages");
-      if (!isNaN(input) && input >= 1 && input <= total) {
-        $("#flipbook").turn("page", input);
-        playFlipSound();
-      } else {
-        alert("1분내 정수를 입력해주세요.");
-      }
-    });
     $("#prev").on("click", () => { $("#flipbook").turn("previous"); playFlipSound(); });
     $("#next").on("click", () => { $("#flipbook").turn("next"); playFlipSound(); });
+
+    $("#pageInput").on("keypress", function(e) {
+      if (e.which === 13) {
+        const input = parseInt($(this).val(), 10);
+        const total = $("#flipbook").turn("pages");
+        if (!isNaN(input) && input >= 1 && input <= total) {
+          $("#flipbook").turn("page", input);
+          playFlipSound();
+        } else {
+          alert("1부터 " + total + " 사이의 정수를 입력해주세요.");
+        }
+      }
+    });
 
     let lastWidth = window.innerWidth;
     $(window).on("resize orientationchange", () => {
