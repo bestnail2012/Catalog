@@ -186,11 +186,13 @@
     const displayMode = getDisplayMode();
 
     const flipbook = $("#flipbook");
+    const currentPageBefore = flipbook.data("turn") ? flipbook.turn("page") : 1;
     if (flipbook.data("turn")) {
       flipbook.turn("destroy");
     }
 
-    flipbook.html(pages.join("\n"));
+    flipbook.html(pages.join("
+"));
 
     waitForImages(() => {
       flipbook.turn({
@@ -212,7 +214,7 @@
       updateButtons();
       // 페이지를 다시 설정하여 displayMode 변경 시 오류 방지
       const currentPage = flipbook.turn("page") || 1;
-      flipbook.turn("page", currentPage);
+      flipbook.turn("page", currentPageBefore);
     });
 
     updateButtons();
