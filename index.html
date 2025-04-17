@@ -65,14 +65,11 @@
     #loading span { margin-top: 10px; font-size: 18px; color: #333; }
 
     #flipbook {
-      margin: 20px auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      touch-action: manipulation;
+      margin: 20px auto; box-shadow: 0 0 10px rgba(0,0,0,0.2); touch-action: manipulation;
     }
 
     .page {
-      display: flex; justify-content: center; align-items: center; background: white;
-      position: relative;
+      display: flex; justify-content: center; align-items: center; background: white; position: relative;
     }
 
     .page img {
@@ -87,19 +84,13 @@
     @media (max-width: 600px) {
       .page-number-display { font-size: 9px !important; }
 
-      .navbar-left {
-        justify-content: flex-start;
-      }
-
+      .navbar-left { justify-content: flex-start; }
       .navbar-left span {
         font-size: 13px !important;
         margin-left: -10px !important;
-        font-weight: bold;
       }
 
-      .navbar-right {
-        justify-content: flex-end;
-      }
+      .navbar-right { justify-content: flex-end; }
 
       .sound-toggle {
         font-size: 12px !important;
@@ -115,6 +106,7 @@
 
       .page {
         justify-content: center;
+        align-items: center;
       }
     }
 
@@ -131,37 +123,27 @@
 
     .nav-buttons button:hover { background-color: #555; }
 
-    .page-slider {
-      width: 150px;
-    }
+    .page-slider { width: 150px; }
   </style>
 
   <script>
-    let previousOrientation = window.orientation;
+    let previousOrientation = window.screen.orientation ? window.screen.orientation.type : window.orientation;
     window.addEventListener("orientationchange", function () {
       setTimeout(() => {
-        if (window.orientation !== previousOrientation) {
-          previousOrientation = window.orientation;
+        const current = window.screen.orientation ? window.screen.orientation.type : window.orientation;
+        if (current !== previousOrientation) {
+          previousOrientation = current;
           localStorage.setItem("skipAnimation", "true");
           location.reload();
         }
       }, 300);
     });
 
-    // Disable flipbook animation if skipAnimation is set
     document.addEventListener("DOMContentLoaded", function () {
       const skip = localStorage.getItem("skipAnimation") === "true";
-      if (window.$) {
-        const turnOptions = {
-          acceleration: true,
-          display: 'double',
-          gradients: !skip,
-          autoCenter: true,
-          duration: skip ? 0 : 600
-        };
-        $('#flipbook').turn(turnOptions);
-        localStorage.removeItem("skipAnimation");
-      }
+      const turnOptions = { acceleration: true, display: 'double', gradients: !skip, autoCenter: true, duration: skip ? 0 : 600 };
+      $('#flipbook').turn(turnOptions);
+      localStorage.removeItem("skipAnimation");
     });
   </script>
 </head>
