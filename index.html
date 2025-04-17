@@ -31,7 +31,7 @@
     .navbar a {
       background-color: white; color: black; text-decoration: none;
       font-size: 16px; padding: 6px 12px; border-radius: 5px;
-      display: flex; align-items: center;
+      display: flex; align-items: center; height: 36px;
     }
 
     .navbar a img { height: 24px; margin-right: 6px; }
@@ -112,6 +112,10 @@
         padding: 2px 6px !important;
         height: 28px !important;
       }
+
+      .page {
+        justify-content: center;
+      }
     }
 
     .nav-buttons {
@@ -147,15 +151,16 @@
     // Disable flipbook animation if skipAnimation is set
     document.addEventListener("DOMContentLoaded", function () {
       const skip = localStorage.getItem("skipAnimation") === "true";
-      if (skip) {
+      if (window.$) {
+        const turnOptions = {
+          acceleration: true,
+          display: 'double',
+          gradients: !skip,
+          autoCenter: true,
+          duration: skip ? 0 : 600
+        };
+        $('#flipbook').turn(turnOptions);
         localStorage.removeItem("skipAnimation");
-        if (window.$) {
-          $('#flipbook').turn({ acceleration: true, display: 'double', gradients: false, autoCenter: true, duration: 0 });
-        }
-      } else {
-        if (window.$) {
-          $('#flipbook').turn({ acceleration: true, display: 'double', gradients: true, autoCenter: true });
-        }
       }
     });
   </script>
