@@ -5,7 +5,13 @@
   <title>B-EST CATALOG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js">
+function goToIntro() {
+  document.getElementById("intro").style.display = "flex";
+  document.getElementById("flipbook").innerHTML = "";
+  localStorage.removeItem("lastPage");
+}
+</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
 
   <style>
@@ -94,7 +100,7 @@
 
 <div class="navbar">
   <div class="navbar-left">
-    <span>B-EST CATALOG</span>
+    <span style="font-weight:bold; font-size:22px; cursor:pointer;" onclick="goToIntro()">B-EST CATALOG</span>
   </div>
   <div class="navbar-right">
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
