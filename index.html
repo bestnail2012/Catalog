@@ -85,8 +85,8 @@
       position: absolute;
       border: 2px solid #333;
       border-radius: 50%;
-      width: 120px;
-      height: 120px;
+      width: 300px;
+      height: 300px;
       overflow: hidden;
       pointer-events: none;
       display: none;
@@ -94,7 +94,7 @@
     }
     .zoom-lens img {
       position: absolute;
-      transform: scale(2);
+      transform: scale(1.5);
       transform-origin: top left;
     }
   </style>
@@ -315,11 +315,14 @@ let flipVolume = 1.0;
       if (target.tagName === "IMG" && target.closest(".page")) {
         const rect = target.getBoundingClientRect();
         zoomLens.style.display = "block";
-        zoomLens.style.left = e.pageX - 60 + "px";
-        zoomLens.style.top = e.pageY - 60 + "px";
+        const lensSize = 300;
+        const offsetX = lensSize / 2;
+        const offsetY = lensSize / 2;
+        zoomLens.style.left = e.pageX - offsetX + "px";
+        zoomLens.style.top = e.pageY - offsetY + "px";
         zoomImg.src = target.src;
-        zoomImg.style.left = -((e.pageX - rect.left) * 2 - 60) + "px";
-        zoomImg.style.top = -((e.pageY - rect.top) * 2 - 60) + "px";
+        zoomImg.style.left = -((e.pageX - rect.left) * 1.5 - 150) + "px";
+        zoomImg.style.top = -((e.pageY - rect.top) * 1.5 - 150) + "px";
       } else {
         zoomLens.style.display = "none";
       }
