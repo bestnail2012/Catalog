@@ -7,279 +7,228 @@
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f9f9;
-    }
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #333;
-      color: white;
-      padding: 10px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      background-color: #333; color: white; padding: 10px 20px;
     }
-    .navbar-left {
-      font-size: 20px;
-    }
+    .navbar-left { font-size: 20px; }
     .navbar-right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
+      display: flex; gap: 10px; align-items: center;
     }
     .sound-toggle {
-      background-color: white;
-      font-size: 18px;
-      border: none;
-      cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 5px;
+      background-color: white; font-size: 18px; border: none;
+      cursor: pointer; padding: 6px 12px; border-radius: 5px;
     }
-
+    .navbar a {
+      background-color: white; color: black; text-decoration: none;
+      font-size: 16px; padding: 6px 12px; border-radius: 5px;
+      display: flex; align-items: center;
+    }
+    .navbar a img {
+      height: 24px; margin-right: 6px;
+    }
     #intro {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #fff;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #fff; z-index: 9999;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
     }
-
-    #intro h1 {
-      font-size: 64px;
-      margin: 0;
-      font-weight: bold;
-    }
-
-    #intro h2 {
-      font-size: 40px;
-      margin: 10px 0 30px 0;
-    }
-
+    #intro h1 { font-size: 64px; margin: 0; font-weight: bold; }
+    #intro h2 { font-size: 40px; margin: 10px 0 30px 0; }
     #intro button {
-      padding: 12px 24px;
-      font-size: 18px;
-      background-color: #333;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      padding: 12px 24px; font-size: 18px;
+      background-color: #333; color: white; border: none;
+      border-radius: 8px; cursor: pointer;
     }
-
     #flipbook {
       margin: 20px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-
     .page {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: white;
+      display: flex; justify-content: center;
+      align-items: center; background: white;
     }
-
     .page img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background-color: white;
+      width: 100%; height: 100%; object-fit: contain; background-color: white;
     }
-
     .nav-buttons {
-      text-align: center;
-      position: fixed;
-      bottom: 50px;
-      width: 100%;
-      background: rgba(255,255,255,0.95);
-      z-index: 999;
-      padding: 10px 0;
+      text-align: center; position: fixed; bottom: 50px; width: 100%;
+      background: rgba(255,255,255,0.95); z-index: 999;
+      padding: 10px 0; display: flex; justify-content: center;
+      align-items: center; gap: 10px; flex-wrap: wrap;
     }
-
     .nav-buttons button {
-      font-size: 16px;
-      padding: 10px 24px;
-      margin: 0 10px;
-      background-color: #333;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: background 0.3s;
+      font-size: 14px; padding: 8px 16px;
+      background-color: #333; color: white; border: none;
+      border-radius: 25px; cursor: pointer; transition: background 0.3s;
     }
-
-    .nav-buttons button:hover {
-      background-color: #555;
-    }
-
+    .nav-buttons button:hover { background-color: #555; }
     .page-number {
-      text-align: center;
-      font-size: 14px;
-      margin-top: 5px;
-      color: #555;
+      font-size: 14px; color: #555;
+    }
+    .page-input {
+      width: 60px; padding: 6px; font-size: 14px;
+      border-radius: 5px; border: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
 
-  <!-- 인트로 -->
-  <div id="intro">
-    <h1>B-EST</h1>
-    <h2>CATALOG</h2>
-    <button onclick="startCatalog()">펼쳐보기</button>
+<div id="intro">
+  <h1>B-EST</h1>
+  <h2>CATALOG</h2>
+  <button onclick="startCatalog()">평차보기</button>
+</div>
+
+<div class="navbar">
+  <div class="navbar-left">비에스트 카달로그</div>
+  <div class="navbar-right">
+    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
+    <a href="https://www.bestnail.kr" target="_blank">
+      <img src="비에스트 로고(딱맞게).png" alt="로고">
+      상품머리
+    </a>
   </div>
+</div>
 
-  <!-- 상단 메뉴 -->
-  <div class="navbar">
-    <div class="navbar-left">비에스트 카달로그</div>
-    <div class="navbar-right">
-      <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
-    </div>
-  </div>
+<div id="flipbook"></div>
 
-  <!-- 플립북 -->
-  <div id="flipbook"></div>
+<div class="nav-buttons">
+  <button id="first">⏮</button>
+  <button id="prev">⬅ 이전</button>
+  <span class="page-number" id="page-number">1 / 83</span>
+  <input type="number" id="pageInput" min="1" max="83" class="page-input" />
+  <button id="goPage">이동</button>
+  <button id="next">다음 ➡</button>
+  <button id="last">⏭</button>
+</div>
 
-  <!-- 네비게이션 버튼 -->
-  <div class="nav-buttons">
-    <button id="prev">⬅ 이전</button>
-    <span class="page-number" id="page-number">1 / 83</span>
-    <button id="next">다음 ➡</button>
-  </div>
+<audio id="flipSound" src="page-flip.mp3" preload="auto"></audio>
 
-  <!-- 효과음 -->
-  <audio id="flipSound" src="page-flip.mp3" preload="auto"></audio>
+<script>
+  const totalPages = 83;
+  const pages = [];
+  let soundEnabled = true;
 
-  <script>
-    const totalPages = 83;
-    const pages = [];
-    let soundEnabled = true;
+  for (let i = 1; i <= totalPages; i++) {
+    const num = String(i).padStart(2, '0');
+    pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
+  }
 
-    for (let i = 1; i <= totalPages; i++) {
-      const num = String(i).padStart(2, '0');
-      pages.push(`<div class='page'><img src='${num}.jpg' loading='lazy' /></div>`);
+  function getDisplayMode() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const isPortrait = window.innerHeight > window.innerWidth;
+    return isMobile && isPortrait ? 'single' : 'double';
+  }
+
+  function playFlipSound() {
+    const audio = document.getElementById("flipSound");
+    if (soundEnabled && audio) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+  }
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    document.getElementById("soundToggle").textContent = soundEnabled ? "🔊" : "🔇";
+  }
+
+  function updateButtons() {
+    const total = $("#flipbook").turn("pages");
+    const current = $("#flipbook").turn("page");
+    const view = $("#flipbook").turn("view");
+    const text = view.length > 1 ? `${Math.min(...view)}-${Math.max(...view)} / ${total}` : `${current} / ${total}`;
+    $("#page-number").text(text);
+    $("#prev").css("display", current > 1 ? "inline-block" : "none");
+    $("#next").css("display", current < total ? "inline-block" : "none");
+  }
+
+  function initializeFlipbook() {
+    const maxWidth = 1000;
+    const screenWidth = window.innerWidth;
+    const width = Math.min(screenWidth * 0.95, maxWidth);
+    const height = width * 1.3;
+    const displayMode = getDisplayMode();
+
+    const flipbook = $("#flipbook");
+    if (flipbook.data("turn")) {
+      flipbook.turn("destroy").html("");
     }
 
-    function getDisplayMode() {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const isPortrait = window.innerHeight > window.innerWidth;
-      return isMobile && isPortrait ? 'single' : 'double';
-    }
+    flipbook.html(pages.join("\n"));
 
-    function buildFlipbook() {
-      $("#flipbook").html(pages.join("\n"));
-    }
-
-    function playFlipSound() {
-      const audio = document.getElementById("flipSound");
-      if (soundEnabled && audio) {
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
+    flipbook.turn({
+      width: displayMode === 'single' ? width : width * 2,
+      height: height,
+      autoCenter: true,
+      display: displayMode,
+      gradients: true,
+      duration: 1200,
+      elevation: 50,
+      acceleration: true,
+      turnCorners: "",
+      when: {
+        turning: function(e, page, view) {
+          e.stopPropagation();
+        }
       }
-    }
-
-    function toggleSound() {
-      soundEnabled = !soundEnabled;
-      document.getElementById("soundToggle").textContent = soundEnabled ? "🔊" : "🔇";
-    }
-
-    function initializeFlipbook() {
-      const maxWidth = 1000;
-      const screenWidth = window.innerWidth;
-      const width = Math.min(screenWidth * 0.95, maxWidth);
-      const height = width * 1.3;
-      const displayMode = getDisplayMode();
-
-      if ($("#flipbook").data("turn")) {
-        $("#flipbook").turn("destroy").html(pages.join("\n"));
-      }
-
-      $("#flipbook").turn({
-        width: displayMode === 'single' ? width : width * 2,
-        height: height,
-        autoCenter: true,
-        display: displayMode,
-        gradients: true,
-        duration: 1200,
-        elevation: 50,
-        acceleration: true,
-        turnCorners: "",
-        when: {
-          turning: function(e, page, view) {
-            e.stopPropagation();
-          }
-        }
-      });
-
-      updateButtons();
-    }
-
-    function updateButtons() {
-      const total = $("#flipbook").turn("pages");
-      const current = $("#flipbook").turn("page");
-      const view = $("#flipbook").turn("view");
-      const text = view.length > 1
-        ? `${Math.min(...view)}-${Math.max(...view)} / ${total}`
-        : `${current} / ${total}`;
-
-      $("#page-number").text(text);
-      $("#prev").css("display", current > 1 ? "inline-block" : "none");
-      $("#next").css("display", current < total ? "inline-block" : "none");
-    }
-
-    function startCatalog() {
-      document.getElementById("intro").style.display = "none";
-      buildFlipbook();
-      initializeFlipbook();
-    }
-
-    $(document).ready(function () {
-      $("#prev").on("click", () => {
-        $("#flipbook").turn("previous");
-        playFlipSound();
-      });
-
-      $("#next").on("click", () => {
-        $("#flipbook").turn("next");
-        playFlipSound();
-      });
-
-      let lastWidth = window.innerWidth;
-
-      $(window).on("resize orientationchange", () => {
-        if (Math.abs(window.innerWidth - lastWidth) > 50) {
-          lastWidth = window.innerWidth;
-          initializeFlipbook();
-        }
-      });
-
-      $("#flipbook").on("turned", () => {
-        updateButtons();
-        playFlipSound();
-      });
-
-      // 🔧 개선된 클릭 이벤트 (비율 기반 계산)
-      document.addEventListener("click", function (e) {
-        const flipbook = document.getElementById("flipbook");
-        if (!flipbook.contains(e.target)) return;
-        if ($("#flipbook").turn("animating")) return;
-
-        const rect = flipbook.getBoundingClientRect();
-        const relativeX = (e.clientX - rect.left) / rect.width;
-
-        if (relativeX > 0.5) {
-          $("#flipbook").turn("next");
-        } else {
-          $("#flipbook").turn("previous");
-        }
-
-        playFlipSound();
-      });
     });
-  </script>
+
+    updateButtons();
+  }
+
+  function startCatalog() {
+    document.getElementById("intro").style.display = "none";
+    initializeFlipbook();
+  }
+
+  $(document).ready(function () {
+    $("#first").on("click", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
+    $("#last").on("click", () => { const total = $("#flipbook").turn("pages"); $("#flipbook").turn("page", total); playFlipSound(); });
+    $("#goPage").on("click", () => {
+      const input = parseInt(document.getElementById("pageInput").value, 10);
+      const total = $("#flipbook").turn("pages");
+      if (!isNaN(input) && input >= 1 && input <= total) {
+        $("#flipbook").turn("page", input);
+        playFlipSound();
+      } else {
+        alert("1분내 정수를 입력해주세요.");
+      }
+    });
+    $("#prev").on("click", () => { $("#flipbook").turn("previous"); playFlipSound(); });
+    $("#next").on("click", () => { $("#flipbook").turn("next"); playFlipSound(); });
+
+    let lastWidth = window.innerWidth;
+    $(window).on("resize orientationchange", () => {
+      if (Math.abs(window.innerWidth - lastWidth) > 50) {
+        lastWidth = window.innerWidth;
+        initializeFlipbook();
+      }
+    });
+
+    $("#flipbook").on("turned", () => {
+      updateButtons();
+      playFlipSound();
+    });
+
+    document.addEventListener("click", function (e) {
+      const flipbook = document.getElementById("flipbook");
+      if (!flipbook.contains(e.target)) return;
+      if ($("#flipbook").turn("animating")) return;
+
+      const rect = flipbook.getBoundingClientRect();
+      const xRatio = (e.clientX - rect.left) / rect.width;
+      if (xRatio > 0.5) {
+        $("#flipbook").turn("next");
+      } else {
+        $("#flipbook").turn("previous");
+      }
+      playFlipSound();
+    });
+  });
+</script>
 
 </body>
 </html>
