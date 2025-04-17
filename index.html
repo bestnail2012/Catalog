@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <title>비에스트 카달로그</title>
+  <title>B-EST CATALOG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -69,8 +69,14 @@
       width: 40px; padding: 4px; font-size: 13px; border-radius: 5px; border: 1px solid #ccc;
     }
   </style>
+  <script>
+    const savedPage = localStorage.getItem('lastPage');
+    if (savedPage) {
+      window.lastSavedPage = parseInt(savedPage);
+    }
+  </script>
 </head>
-<body>
+<body onload="if(window.lastSavedPage){ lastPage = window.lastSavedPage; }">
 
 <div id="intro">
   <h1>B-EST</h1>
@@ -85,7 +91,7 @@
 
 <div class="navbar">
   <div class="navbar-left">
-    <span>비에스트 카달로그</span>
+    <span>B-EST CATALOG</span>
   </div>
   <div class="navbar-right">
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
@@ -93,10 +99,25 @@
       <img src="비에스트 로고(딱맞게).png" alt="로고">쇼핑몰
     </a>
   </div>
-  <div class="navbar-right">
-    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
-  </div>
 </div>
+
+<script>
+  let reloadTimeout;
+  function setReloadFallback() {
+    clearTimeout(reloadTimeout);
+    reloadTimeout = setTimeout(() => {
+      if (document.getElementById("loading").style.display !== "none") {
+        localStorage.setItem('lastPage', lastPage || 1);
+        location.reload();
+      }
+    }, 5000);
+  }
+  setReloadFallback();
+  window.addEventListener('orientationchange', () => {
+    localStorage.setItem('lastPage', lastPage || 1);
+    location.reload();
+  });
+</script>
 
 <div id="flipbook"></div>
 
@@ -171,13 +192,6 @@ function initializeFlipbook(startPage = 1) {
     updateButtons();
     $("#loading").hide();
   });
-
-  // 5초 후에도 로딩 화면이 보이면 새로고침
-  setTimeout(() => {
-    if ($("#loading").is(":visible")) {
-      location.reload();
-    }
-  }, 5000);
 }
 
 function updateButtons() {
@@ -188,6 +202,7 @@ function updateButtons() {
   $("#prev").toggle(current > 1);
   $("#next").toggle(current < totalPages);
   lastPage = current;
+  localStorage.setItem('lastPage', lastPage);
 }
 
 function playFlipSound() {
@@ -237,10 +252,8 @@ $(document).ready(function () {
   $(window).on("resize orientationchange", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      if (!orientationReloaded) {
-        orientationReloaded = true;
-        location.reload();
-      }
+      localStorage.setItem('lastPage', lastPage);
+      location.reload();
     }, 200);
   });
 
@@ -249,7 +262,6 @@ $(document).ready(function () {
     playFlipSound();
   });
 
-  // 마우스 클릭으로 페이지 넘김
   document.addEventListener("click", function (e) {
     const flipbook = document.getElementById("flipbook");
     if (!flipbook.contains(e.target)) return;
@@ -264,7 +276,6 @@ $(document).ready(function () {
     playFlipSound();
   });
 
-  // 터치 스와이프 지원 (모바일 & PC 터치 디바이스 공통)
   let xDown = null;
   document.addEventListener("touchstart", function(evt) {
     xDown = evt.touches[0].clientX;
@@ -285,6 +296,5 @@ $(document).ready(function () {
   }, false);
 });
 </script>
-
 </body>
 </html>
