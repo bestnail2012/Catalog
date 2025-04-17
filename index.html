@@ -21,7 +21,7 @@
     }
 
     .navbar-left span {
-      font-size: 20px;
+      font-size: 20px; font-weight: bold;
     }
 
     .navbar-right {
@@ -39,6 +39,7 @@
     .sound-toggle {
       background-color: white; font-size: 18px; border: none;
       cursor: pointer; padding: 6px 12px; border-radius: 5px;
+      height: 36px;
     }
 
     #intro {
@@ -103,11 +104,13 @@
       .sound-toggle {
         font-size: 12px !important;
         padding: 2px 6px !important;
+        height: 28px !important;
       }
 
       .navbar a {
         font-size: 12px !important;
         padding: 2px 6px !important;
+        height: 28px !important;
       }
     }
 
@@ -139,6 +142,21 @@
           location.reload();
         }
       }, 300);
+    });
+
+    // Disable flipbook animation if skipAnimation is set
+    document.addEventListener("DOMContentLoaded", function () {
+      const skip = localStorage.getItem("skipAnimation") === "true";
+      if (skip) {
+        localStorage.removeItem("skipAnimation");
+        if (window.$) {
+          $('#flipbook').turn({ acceleration: true, display: 'double', gradients: false, autoCenter: true, duration: 0 });
+        }
+      } else {
+        if (window.$) {
+          $('#flipbook').turn({ acceleration: true, display: 'double', gradients: true, autoCenter: true });
+        }
+      }
     });
   </script>
 </head>
