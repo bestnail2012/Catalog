@@ -233,8 +233,6 @@ function startCatalog() {
   buildPages();
   initializeFlipbook(lastPage, !!saved);
 }
-  
-}
 
 $(document).ready(function () {
   $(document).on("click", "#first", () => { $("#flipbook").turn("page", 1); playFlipSound(); });
