@@ -8,9 +8,6 @@
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script>
 // 인트로로 이동 + 저장된 페이지 복원 버튼 지원
-function goToIntro() {
-  $("#intro").fadeIn(300);
-  $("#flipbook").html("");
   localStorage.removeItem("lastPage");
   isInitialLoad = true;
 }
@@ -26,10 +23,7 @@ setInterval(() => {
   }
 }, 500);
 
-// B-EST CATALOG 클릭 시 인트로 복귀 처리
-$(document).on("click", "#catalogTitle", function () {
-  goToIntro();
-});
+
 
 // PC에서도 새로고침 후 첫 페이지 넘김 시 소리 제거 보장
 let hasUserInteracted = false;
@@ -106,14 +100,35 @@ function playFlipSound() {
         font-size: 16px !important;
       }
     .nav-buttons {
-      text-align: center; position: fixed; bottom: 50px; width: 100%; background: rgba(255,255,255,0.95);
-      z-index: 999; padding: 10px 0; display: flex; justify-content: center; align-items: center;
-      gap: 10px; flex-wrap: nowrap; overflow-x: auto;
-    }
+  text-align: center;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background: rgba(255,255,255,0.95);
+  z-index: 999;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
     .nav-buttons button {
-      font-size: 14px; padding: 6px 10px; background-color: #333; color: white; border: none;
-      border-radius: 20px; cursor: pointer; transition: background 0.3s; white-space: nowrap;
-    }
+  font-size: 16px;
+  padding: 10px 16px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
+}
     .nav-buttons button:hover { background-color: #555; }
     .page-slider {
       width: 150px;
@@ -135,13 +150,11 @@ function playFlipSound() {
 
 <div class="navbar">
   <div class="navbar-left">
-    <span style="font-weight:bold; font-size:22px; cursor:pointer;" id="catalogTitle">B-EST CATALOG</span>
+    <span style="font-weight:bold; font-size:22px; color:white;">B-EST CATALOG</span>
   </div>
   <div class="navbar-right">
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
-    <a href="https://www.bestnail.kr" target="_blank">
-      <img src="비에스트 로고(딱맞게).png" alt="로고">쇼핑몰
-    </a>
+    
   </div>
 </div>
 
