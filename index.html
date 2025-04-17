@@ -7,11 +7,9 @@
 
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script>
-let isInitialLoad = true;
-</script>
-<script>
 // 인트로로 이동 + 저장된 페이지 복원 버튼 지원
   localStorage.removeItem("lastPage");
+  isInitialLoad = true;
 }
 
 // 로딩 텍스트 애니메이션 (0.5초마다 변경)
@@ -79,13 +77,10 @@ function playFlipSound() {
     #loading img { width: 60px; height: auto; }
     #loading span { margin-top: 10px; font-size: 18px; color: #333; }
     #flipbook {
-  margin: 0 auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  touch-action: manipulation;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      touch-action: manipulation;
+    }
     .page {
       display: flex; justify-content: center; align-items: center; background: white;
       position: relative;
@@ -122,26 +117,24 @@ function playFlipSound() {
   gap: 4px;
   flex-wrap: nowrap;
   overflow-x: auto;
-  transition: opacity 0.3s ease;
 }
     .nav-buttons button {
-  font-size: 18px;
-  padding: 10px 18px;
+  font-size: 14px;
+  padding: 6px 10px;
   background-color: #333;
   color: white;
   border: none;
-  border-radius: 24px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background 0.3s;
   white-space: nowrap;
   font-family: 'Segoe UI', sans-serif;
-  font-weight: bold;
+  font-weight: normal;
 }
     .nav-buttons button:hover { background-color: #555; }
     .page-slider {
-  width: 180px;
-  height: 6px;
-}
+      width: 150px;
+    }
   </style>
 </head>
 <body>
@@ -171,7 +164,8 @@ function playFlipSound() {
 
 <div id="flipbook"></div>
 
-<div id="sliderPageDisplay" style="position:absolute; top:-30px; background:#333; color:#fff; font-size:14px; padding:4px 8px; border-radius:12px; display:none; pointer-events:none; font-weight:bold;"></div>
+$1
+  <div id="sliderPageDisplay" style="position:absolute; top:-30px; background:#333; color:#fff; font-size:14px; padding:4px 8px; border-radius:12px; display:none; pointer-events:none; font-weight:bold;"></div>
   <button id="next">다음 ➡</button>
   <button id="last">⏭</button>
 </div>
@@ -218,9 +212,7 @@ function initializeFlipbook(startPage = 1) {
   if (flipbook.data("turn")) flipbook.turn("destroy").html("");
   const screenWidth = window.innerWidth;
   const maxWidth = 1200;
-  // displayMode 선언이 먼저 와야 함
-const displayMode = window.innerHeight > window.innerWidth ? 'single' : 'double';
-const width = displayMode === 'single' && screenWidth < 600 ? screenWidth : Math.min(screenWidth * 0.95, maxWidth);
+  const width = Math.min(screenWidth * 0.95, maxWidth);
   const height = width * 1.3;
   const displayMode = window.innerHeight > window.innerWidth ? 'single' : 'double';
 
@@ -287,25 +279,6 @@ function startCatalog() {
 }
 
 $(document).ready(function () {
-  let navVisible = true;
-  let hideNavTimeout;
-
-  function showNav() {
-    if (!navVisible) {
-      $('.nav-buttons').css('opacity', 1);
-      navVisible = true;
-    }
-    clearTimeout(hideNavTimeout);
-    hideNavTimeout = setTimeout(() => {
-      if (window.innerWidth <= 600) {
-        $('.nav-buttons').css('opacity', 0);
-        navVisible = false;
-      }
-    }, 2000);
-  }
-
-  $(document).on('touchstart touchmove mousemove', showNav);
-  showNav();
   $("#first").click(() => { $("#flipbook").turn("page", 1); playFlipSound(); });
   $("#last").click(() => { $("#flipbook").turn("page", totalPages); playFlipSound(); });
   $("#prev").click(() => { $("#flipbook").turn("previous"); playFlipSound(); });
