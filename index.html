@@ -11,6 +11,38 @@ function goToIntro() {
   document.getElementById("flipbook").innerHTML = "";
   localStorage.removeItem("lastPage");
 }
+
+// 로딩 텍스트 애니메이션 (0.5초마다 변경)
+const loadingTexts = ["로딩 중", "로딩 중.", "로딩 중..", "로딩 중...", "로딩 중"];
+let loadingIndex = 0;
+setInterval(() => {
+  const span = document.querySelector("#loading span");
+  if (span) {
+    span.textContent = loadingTexts[loadingIndex];
+    loadingIndex = (loadingIndex + 1) % loadingTexts.length;
+  }
+}, 500);
+
+// B-EST CATALOG 클릭 시 인트로 복귀 처리
+$(document).on("click", "#catalogTitle", function () {
+  $("#intro").show();
+  $("#flipbook").html("");
+  localStorage.removeItem("lastPage");
+});
+
+// PC에서도 새로고침 후 첫 페이지 넘김 시 소리 제거 보장
+let hasUserInteracted = false;
+$("#flipbook").on("mousedown touchstart", function () {
+  hasUserInteracted = true;
+});
+
+function playFlipSound() {
+  if (isInitialLoad || !hasUserInteracted) return;
+  const audio = document.getElementById("flipSound");
+  audio.volume = soundLevel;
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
+}
 </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
 
@@ -67,9 +99,11 @@ function goToIntro() {
     }
     @media (max-width: 600px) {
       .page-number-display {
-        font-size: 12px !important;
+        font-size: 10px !important;
       }
-    }
+      .navbar-left span {
+        font-size: 16px !important;
+      }
     .nav-buttons {
       text-align: center; position: fixed; bottom: 50px; width: 100%; background: rgba(255,255,255,0.95);
       z-index: 999; padding: 10px 0; display: flex; justify-content: center; align-items: center;
@@ -100,7 +134,7 @@ function goToIntro() {
 
 <div class="navbar">
   <div class="navbar-left">
-    <span style="font-weight:bold; font-size:22px; cursor:pointer;" onclick="goToIntro()">B-EST CATALOG</span>
+    <span style="font-weight:bold; font-size:22px; cursor:pointer;" id="catalogTitle">B-EST CATALOG</span>
   </div>
   <div class="navbar-right">
     <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
