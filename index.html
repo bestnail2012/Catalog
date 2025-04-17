@@ -76,7 +76,7 @@
     }
   </script>
 </head>
-<body onload="if(window.lastSavedPage){ lastPage = window.lastSavedPage; }">
+<body onload="startCatalog()">
 
 <div id="intro">
   <h1>B-EST</h1>
@@ -227,6 +227,10 @@ function toggleSound() {
 
 function startCatalog() {
   document.getElementById("intro").style.display = "none";
+  const saved = localStorage.getItem('lastPage');
+  if (saved) {
+    lastPage = parseInt(saved);
+  }
   buildPages();
   initializeFlipbook(lastPage);
 }
