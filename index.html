@@ -84,20 +84,22 @@
     .zoom-lens {
       position: absolute;
       border: 2px solid #333;
-      border-radius: 50%;
-      width: 300px;
-      height: 300px;
+      border-radius: 8px;
+      width: 500px;
+      height: 250px;
       overflow: hidden;
       pointer-events: none;
       display: none;
       z-index: 1000;
+      background: white;
     }
     .zoom-lens img {
       position: absolute;
-      transform: scale(1.5);
+      transform: scale(var(--zoom-scale));
       transform-origin: top left;
     }
   </style>
+<style>:root { --zoom-scale: 1.5; }</style>
 </head>
 <body>
 
@@ -308,8 +310,10 @@ let flipVolume = 1.0;
     // 마우스 확대 기능 (PC에서만)
     const zoomLens = document.getElementById("zoomLens");
     const zoomImg = document.getElementById("zoomImg");
+    let zoomScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zoom-scale')) || 1.5;
 
     document.addEventListener("mousemove", function (e) {
+      zoomScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zoom-scale')) || 1.5;
       if (window.innerWidth <= 768) return zoomLens.style.display = "none";
       const target = e.target;
       if (target.tagName === "IMG" && target.closest(".page")) {
@@ -321,8 +325,8 @@ let flipVolume = 1.0;
         zoomLens.style.left = e.pageX - offsetX + "px";
         zoomLens.style.top = e.pageY - offsetY + "px";
         zoomImg.src = target.src;
-        zoomImg.style.left = -((e.pageX - rect.left) * 1.5 - 150) + "px";
-        zoomImg.style.top = -((e.pageY - rect.top) * 1.5 - 150) + "px";
+        zoomImg.style.left = -((e.clientX - rect.left) * zoomScale - 250) + "px";
+        zoomImg.style.top = -((e.clientY - rect.top) * zoomScale - 125) + "px";
       } else {
         zoomLens.style.display = "none";
       }
